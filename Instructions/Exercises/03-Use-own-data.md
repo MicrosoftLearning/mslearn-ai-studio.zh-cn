@@ -19,11 +19,13 @@ Copilot 解决方案会将自定义数据集成到提示流中。 为了支持�
 
 1. 在 Web 浏览器中打开 [Azure 门户](https://portal.azure.com) (`https://portal.azure.com`)，然后使用 Azure 凭据登录。
 1. 在主页上选择“+ 创建资源”，然后搜索 `Azure AI Search`。**** 然后使用以下设置创建新的 Azure AI 搜索资源：
+
     - 订阅****：*选择 Azure 订阅*
     - **资源组**：选择或创建资源组
     - **服务名称**：输入独一无二的服务名称**
     - 位置****：选择任何可用位置**
     - **定价层**：标准
+
 1. 等待 Azure AI 搜索资源部署完成。
 
 ## 创建 Azure AI 项目
@@ -32,8 +34,10 @@ Copilot 解决方案会将自定义数据集成到提示流中。 为了支持�
 
 1. 在 Web 浏览器中打开 [Azure AI Studio](https://ai.azure.com) (`https://ai.azure.com`)，然后使用 Azure 凭据登录。
 1. 在“生成”页上选择“+ 新建 AI 项目”。******** 然后，在“入门指南”向导中，使用下面的设置创建一个项目：****
+
     - 项目名称****：项目的唯一名称**
     - AI 中心****：使用以下设置创建新资源：**
+
         - AI 中心名称****：唯一的名称**
         - **Azure 订阅**：Azure 订阅**
         - 资源组****：*选择包含 Azure AI 搜索资源的资源组*
@@ -104,12 +108,15 @@ Copilot 的数据包括一组 PDF 格式的旅行手册，来自虚构的旅行�
 1. 在“操场”页的“配置”**** 窗格中，确保选择了你的 gpt-35-turbo**** 模型部署。 然后，在****“聊天会话”窗格中提交提示“`Where can I stay in New York?`”
 1. 查看响应，该响应应该是来自模型的通用答案，没有来自索引的任何数据。
 1. 在****“助手设置”窗格中，选择“添加数据****”，然后使用以下设置添加数据源：
+
     - **数据源**：
         - 选择数据源****：Azure AI 搜索
         - **订阅**：*Azure 订阅*
         - Azure AI 搜索服务****：你的 Azure AI 搜索资源**
         - Azure AI 搜索索引****：brochures-index
-        - 添加矢量搜索****：未选中<u></u>
+        - 添加矢量搜索****：未选定<u></u>
+        - 使用自定义字段映射****：选定
+        - 选中此框以确认产生的使用量。
     - 数据字段映射****：
         - 内容数据****：content
         - 文件名****：filepath
@@ -117,6 +124,7 @@ Copilot 的数据包括一组 PDF 格式的旅行手册，来自虚构的旅行�
         - URL****：url
     - **数据管理**：
         - 搜索类型****：关键字
+
 1. 添加数据源并重启聊天会话后，重新提交提示“`Where can I stay in New York?`”
 1. 查看响应，该响应应基于索引中的数据。
 
@@ -125,46 +133,64 @@ Copilot 的数据包括一组 PDF 格式的旅行手册，来自虚构的旅行�
 矢量索引已保存在 Azure AI Studio 项目中，使你能够在提示流中轻松使用它。
 
 1. 在 Azure AI Studio 的项目的左侧导航窗格中的“组件”**** 下，选择“数据”****。
-1. 选择 brochures-index**** 文件夹，其中包含之前创建的索引的数据。
-1. 在索引的“数据链接”**** 部分，将“存储 URI”**** 值复制到剪贴板（它应该类似于 `https://xxx.blob.core.windows.net/xxx/azureml/xxx/index/`）。 需要此 URI 来连接到提示流中的索引数据。
+1. 选择 brochures-index**** 文件夹，其中包含之前创建的索引。
+1. 在索引的“数据链接”**** 部分，将“数据连接 URI”**** 值复制到剪贴板（它应该类似于 `azureml://subscriptions/xxx/resourcegroups/xxx/workspaces/xxx/datastores/workspaceblobstore/paths/azureml/xxx/index/`）。 需要此 URI 来连接到提示流中的索引。
 1. 在项目中的左侧导航窗格的“工具”**** 下，选择“提示流”**** 页。
 1. 通过克隆库中的“基于数据的多轮问答”**** 示例来创建新的提示流。 将此示例的克隆保存在名为 `brochure-flow` 的文件夹中。
 1. 当提示流设计器页面打开时，查看 brochure-flow****。 其图应如下图所示：
 
-    ![提示流图的屏幕截图](./media/brochure-flow.png)
+    ![提示流图的屏幕截图](./media/chat-flow.png)
 
     你正在使用的示例提示流实现了聊天应用程序的提示逻辑，用户可以在其中通过迭代方式将文本输入提交到聊天界面。 对话历史记录将保留，包含在每次迭代的上下文中。 提示流会协调一系列工具**，以实现以下目的：
 
-    1. 将历史记录追加到聊天输入，以问题的上下文化形式定义提示。
-    1. 为问题创建嵌入**（使用嵌入模型将文本转换为矢量）。
-    1. 根据问题搜索矢量索引以获取相关信息。
-    1. 通过使用从索引检索到的数据来生成提示上下文，从而扩充问题。
-    1. 通过添加系统消息和构建聊天历史记录来创建提示变体。
-    1. 将提示提交给语言模型以生成自然语言响应。
+    - 将历史记录追加到聊天输入，以问题的上下文化形式定义提示。
+    - 使用你的索引和你自己根据问题选择的查询类型来检索上下文。
+    - 通过使用从索引检索到的数据来生成提示上下文，从而扩充问题。
+    - 通过添加系统消息和构建聊天历史记录来创建提示变体。
+    - 将提示提交给语言模型以生成自然语言响应。
 
-1. 在“运行时”**** 列表中，选择“启动”**** 以启动自动运行时。 然后等待它启动。 这为提示流提供计算上下文。 在等待期间，请在“流”**** 选项卡中查看流中的工具部分。
-1. 在“输入”**** 部分，确保输入包括 chat_history**** 和 chat_input****。 此示例中的默认聊天记录包括一些有关 AI 的对话。
-1. 在“输出”**** 部分，确保 chat_output**** 值为 ${chat_with_context.output}**。
+1. 在“运行时”**** 列表中，选择“启动”**** 以启动自动运行时。
+
+    然后等待它启动。 这为提示流提供计算上下文。 在等待期间，请在“流”**** 选项卡中查看流中的工具部分。
+
+1. 在****“输入”部分，确保输入包括以下项：
+    - chat_history****
+    - chat_input****
+
+    此示例中的默认聊天记录包括一些有关 AI 的对话。
+
+1. 在****“输出”部分，确保输出包括以下项：
+
+    - 值为 `${chat_with_context.output}` 的 chat_output****
+
 1. 在“modify_query_with_history”**** 部分选择以下设置（其他部分保持原样）：
-    - 连接****：Default_AzureOpenAI
-    - Api****：聊天
-    - deployment_name****：gpt-35-turbo
-    - response_format****：{"type":"text"}
-1. 在 embed_the_question**** 部分，设置以下参数值：
-    - 连接****(Azure OpenAI、OpenAI)**：Default_AzureOpenAI
-    - deployment_name**** (字符串)**：text-embedding-ada-00
-    - 输入****(字符串)**：${modify_query_with_history.output}
-1. 在 search_question_from_indexed_docs**** 部分，设置以下参数值：
-    - path**** (string)**：删除现有 URI 并粘贴矢量索引的 URI**
-    - query**** (object)**：${embed_the_question.output}
-    - top_k**** *(int)*：2
+
+    - Connection****：`Default_AzureOpenAI`
+    - Api****：`chat`
+    - deployment_name****：`gpt-35-turbo`
+    - response_format****：`{"type":"text"}`
+
+1. 在 lookup**** 部分，设置以下参数值：
+
+    - mlindex_content****：选择空字段以打开“生成”窗格**
+        - index_type****：`MLIndex file from path`
+        - mlindex_path****：粘贴矢量索引的 URI**
+    - queries****：`${modify_query_with_history.output}`
+    - query_type****：`Hybrid (vector + keyword)`
+    - top_k****：2
+
 1. 在 generate_prompt_context**** 部分，检查 Python 脚本并确保此工具的“inputs”**** 包含以下参数：
+
     - search_result**** (object)**：${search_question_from_indexed_docs.output}
+
 1. 在 Prompt_variants**** 部分，检查 Python 脚本并确保此工具的“inputs”**** 包含以下参数：
+
     - contexts**** (string)**：${generate_prompt_context.output}
     - chat_history**** (string)**：${inputs.chat_history}
     - chat_input**** (string)**：${inputs.chat_input}
+
 1. 在 chat_with_context**** 部分选择以下设置（其他部分保持原样）：
+
     - 连接****：Default_AzureOpenAI
     - Api****：聊天
     - deployment_name****：gpt-35-turbo
