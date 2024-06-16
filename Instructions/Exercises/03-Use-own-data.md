@@ -66,7 +66,7 @@ Copilot 解决方案会将自定义数据集成到提示流中。 为了支持�
 - 一个可以根据数据生成对问题的自然语言回答的模型。
 
 1. 在 Azure AI Studio 的项目中，在左侧导航窗格中的“组件”下，选择“部署”页。********
-1. 使用以下设置创建一个“text-embedding-ada-002”模型的新部署（使用“实时终结点”）：********
+1. 使用以下设置创建“text-embedding-ada-002”**** 模型的新部署：
 
     - **部署名称**：`text-embedding-ada-002`
     - **模型版本**：*默认*
@@ -141,7 +141,7 @@ Copilot 的数据包括一组 PDF 格式的旅行手册，来自虚构的旅行�
     - 通过添加系统消息和构建聊天历史记录来创建提示变体。
     - 将提示提交给语言模型以生成自然语言响应。
 
-1. 在“运行时”**** 列表中，选择“启动”**** 以启动自动运行时。
+1. 使用“启动计算会话”按钮启动流的运行时计算。****
 
     等待运行时启动。 这为提示流提供计算上下文。 在等待期间，请在“流”**** 选项卡中查看流中的工具部分。
 
@@ -153,22 +153,22 @@ Copilot 的数据包括一组 PDF 格式的旅行手册，来自虚构的旅行�
 
 1. 在****“输出”部分，确保输出包括以下项：
 
-    - 值为 `${chat_with_context.output}` 的 chat_output****
+    - **** chat_output：值为 ${chat_with_context.output}
 
 1. 在“modify_query_with_history”**** 部分选择以下设置（其他部分保持原样）：
 
-    - Connection****：`Default_AzureOpenAI`
-    - Api****：`chat`
-    - deployment_name****：`gpt-35-turbo-16k`
-    - response_format****：`{"type":"text"}`
+    - 连接****：** AI 中心的默认 Azure OpenAI 资源
+    - **** Api：chat
+    - deployment_name****：gpt-35-turbo-16k
+    - response_format****：{"type":"text"}
 
 1. 在 lookup**** 部分，设置以下参数值：
 
     - mlindex_content****：选择空字段以打开“生成”窗格**
         - index_type****：已注册的索引
         - mlindex_asset_id****：brochures-index:1
-    - queries****：`${modify_query_with_history.output}`
-    - query_type****：`Hybrid (vector + keyword)`
+    - **** queries：${modify_query_with_history.output}
+    - **** query_type：Hybrid（矢量 + 关键字）
     - top_k****：2
 
 1. 在 generate_prompt_context**** 部分，检查 Python 脚本并确保此工具的“inputs”**** 包含以下参数：
