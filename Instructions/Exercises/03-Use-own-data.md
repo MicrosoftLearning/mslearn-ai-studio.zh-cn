@@ -44,12 +44,12 @@ Copilot 解决方案会将自定义数据集成到提示流中。 为了支持�
 现在，你已准备好创建 Azure AI Studio 项目和支持它的 Azure AI 资源。
 
 1. 在 Web 浏览器中打开 [Azure AI Studio](https://ai.azure.com) (`https://ai.azure.com`)，然后使用 Azure 凭据登录。
-1. 在“生成”页上选择“+ 新建 AI 项目”。******** 然后，在“入门指南”向导中，使用下面的设置创建一个项目：****
+1. 在 Azure AI Studio 的“主页”上，选择“+ 新建项目”********。 然后，在“创建项目”向导中，使用以下设置创建项目****：
 
     - 项目名称****：项目的唯一名称**
-    - AI 中心****：使用以下设置创建新资源：**
+    - **中心**：使用以下设置创建新资源：**
 
-        - AI 中心名称****：唯一的名称**
+        - **中心名称**：唯一的名称**
         - **Azure 订阅**：Azure 订阅**
         - 资源组****：*选择包含 Azure AI 搜索资源的资源组*
         - 位置****：*你的 Azure AI 搜索资源所在的同一位置*
@@ -66,14 +66,14 @@ Copilot 解决方案会将自定义数据集成到提示流中。 为了支持�
 - 一个可以根据数据生成对问题的自然语言回答的模型。
 
 1. 在 Azure AI Studio 的项目中，在左侧导航窗格中的“组件”下，选择“部署”页。********
-1. 使用以下设置创建一个“text-embedding-ada-002”模型的新部署（使用“实时终结点”）：********
+1. 使用以下设置创建“text-embedding-ada-002”**** 模型的新部署：
 
     - **部署名称**：`text-embedding-ada-002`
     - **模型版本**：*默认*
     - **高级选项**：
         - **内容筛选器**：*默认*
         - **每分钟令牌的速率限制**：`5K`
-1. 重复上述步骤，使用部署名称 `gpt-35-turbo` 部署 gpt-35-turbo**** 模型。
+1. 重复上述步骤，使用部署名称 `gpt-35-turbo-16k` 部署 gpt-35-turbo-16k**** 模型。
 
     > **注意**：减少每分钟令牌数 (TPM) 有助于避免正在使用的订阅中可用配额的过度使用。 对于本练习中使用的数据，5,000 TPM 已经足够。
 
@@ -86,7 +86,8 @@ Copilot 的数据包括一组 PDF 格式的旅行手册，来自虚构的旅行�
 1. 选择“+ 新建数据”。****
 1. 在“添加数据”向导中，展开下拉菜单以选择“上传文件/文件夹”。********
 1. 选择“上传文件夹”，然后选择“手册”文件夹。********
-1. 将数据名称设置为“手册”。****
+1. 将数据名称设置为 `brochures`。
+1. 等待文件夹上传，并注意它包含多个 .pdf 文件。
 
 ## 为数据创建索引
 
@@ -95,29 +96,28 @@ Copilot 的数据包括一组 PDF 格式的旅行手册，来自虚构的旅行�
 1. 在 Azure AI Studio 的项目的左侧导航窗格中的“组件”**** 下，选择“索引”**** 页。
 1. 添加一个新的索引，设置如下:
     - 源数据****：
-        - **数据源**：使用现有项目数据
+        - **数据源**：Azure AI Studio 中的数据
             - 选择 brochures**** 数据源**
-    - 索引存储****：
-        - 选择到 Azure AI 搜索资源的 AzureAISearch**** 连接**
+    - 索引设置****：
+        - 选择 Azure AI 搜索服务****：选择到 Azure AI 搜索资源的 AzureAISearch**** 连接**
+        - **索引名称**：`brochures-index`
+        - **虚拟机**：自动选择
     - 搜索设置****：
         - 矢量设置****：向此搜索资源添加矢量搜索
-        - Azure OpenAI 资源****：Default_AzureOpenAI
-        - 确认部署尚未部署的嵌入模型**
-    - 索引设置****：
-        - 索引名称****：brochures-index
-        - **虚拟机**：自动选择
+        - **选择嵌入模型**：*为你的中心选择默认的 Azure OpenAI 资源。*
+        
 1. 等待索引编制过程完成，这可能需要几分钟时间。 索引创建操作包含以下作业：
 
     - 将文本标记破解、分块，然后将其嵌入到“手册”数据中。
-    - 使用新索引更新 Azure AI 搜索。
+    - 创建 Azure AI 搜索索引。
     - 注册索引资产。
 
 ## 测试索引
 
 在基于 RAG 的提示流中使用索引之前，我们先验证它是否可用于影响生成式 AI 响应。
 
-1. 在左侧导航窗格的“工具”**** 下，选择“操场”**** 页。
-1. 在“操场”页的“选项”面板中，确保选择了你的 gpt-35-turbo **** 模型部署。 然后，在主聊天会话面板中提交提示“`Where can I stay in New York?`”
+1. 在左侧导航窗格的“项目操场”**** 下，选择“聊天”**** 页。
+1. 在“聊天”页的“选项”面板中，确保选择了你的 gpt-35-turbo-16k **** 模型部署。 然后，在主聊天会话面板中提交提示“`Where can I stay in New York?`”
 1. 查看响应，该响应应该是来自模型的通用答案，没有来自索引的任何数据。
 1. 在“设置”面板中，选择“添加数据”选项卡，然后添加 brochures-index 项目索引，并选择“混合(矢量 + 关键字)”搜索类型。************
 1. 添加索引并重启聊天会话后，重新提交提示“`Where can I stay in New York?`”
@@ -141,7 +141,7 @@ Copilot 的数据包括一组 PDF 格式的旅行手册，来自虚构的旅行�
     - 通过添加系统消息和构建聊天历史记录来创建提示变体。
     - 将提示提交给语言模型以生成自然语言响应。
 
-1. 在“运行时”**** 列表中，选择“启动”**** 以启动自动运行时。
+1. 使用“启动计算会话”按钮启动流的运行时计算。****
 
     等待运行时启动。 这为提示流提供计算上下文。 在等待期间，请在“流”**** 选项卡中查看流中的工具部分。
 
@@ -153,22 +153,22 @@ Copilot 的数据包括一组 PDF 格式的旅行手册，来自虚构的旅行�
 
 1. 在****“输出”部分，确保输出包括以下项：
 
-    - 值为 `${chat_with_context.output}` 的 chat_output****
+    - **** chat_output：值为 ${chat_with_context.output}
 
 1. 在“modify_query_with_history”**** 部分选择以下设置（其他部分保持原样）：
 
-    - Connection****：`Default_AzureOpenAI`
-    - Api****：`chat`
-    - deployment_name****：`gpt-35-turbo`
-    - response_format****：`{"type":"text"}`
+    - 连接****：** AI 中心的默认 Azure OpenAI 资源
+    - **** Api：chat
+    - deployment_name****：gpt-35-turbo-16k
+    - response_format****：{"type":"text"}
 
 1. 在 lookup**** 部分，设置以下参数值：
 
     - mlindex_content****：选择空字段以打开“生成”窗格**
         - index_type****：已注册的索引
         - mlindex_asset_id****：brochures-index:1
-    - queries****：`${modify_query_with_history.output}`
-    - query_type****：`Hybrid (vector + keyword)`
+    - **** queries：${modify_query_with_history.output}
+    - **** query_type：Hybrid（矢量 + 关键字）
     - top_k****：2
 
 1. 在 generate_prompt_context**** 部分，检查 Python 脚本并确保此工具的“inputs”**** 包含以下参数：
@@ -185,7 +185,7 @@ Copilot 的数据包括一组 PDF 格式的旅行手册，来自虚构的旅行�
 
     - 连接****：Default_AzureOpenAI
     - Api****：聊天
-    - deployment_name****：gpt-35-turbo
+    - deployment_name****：gpt-35-turbo-16k
     - response_format****：{"type":"text"}
 
     然后确保该工具的 inputs**** 包含以下参数：
@@ -204,12 +204,14 @@ Copilot 的数据包括一组 PDF 格式的旅行手册，来自虚构的旅行�
 
 有了一个使用索引数据的工作流后，就可以将其部署为服务以供某个 Copilot 应用程序使用了。
 
+> **注意**：部署有时可能需要耗费一定时间，具体取决于区域和数据中心负载。 在部署过程中，可随时转到下面的挑战部分，如果时间紧迫，可跳过部署测试。
+
 1. 在工具栏中选择“部署”。****
 1. 使用以下设置创建一个部署：
     - 基本设置：
         - **终结点**：新建
-        - 终结点名称****：`brochure-endpoint`
-        - 部署名称****：brochure-endpoint-1
+        - **终结点名称**：*使用默认唯一终结点名称*
+        - **部署名称**：*使用默认部署终结点名称*
         - **虚拟机**：Standard_DS3_v2
         - **实例计数**：3
         - 推理数据收集****：选定
@@ -237,5 +239,4 @@ Copilot 的数据包括一组 PDF 格式的旅行手册，来自虚构的旅行�
 
 为了避免不必要的 Azure 成本和资源使用，应删除在本练习中部署的资源。
 
-1. 在 Azure AI Studio 中，查看“生成****”页。 然后选择在本练习中创建的项目，并使用“删除项目”**** 按钮将其删除。 删除所有组件可能需要几分钟的时间。
-1. 如果你已探索完 Azure AI Studio，请返回到 [Azure 门户](https://portal.azure.com) (`https://portal.azure.com`)，并根据需要使用 Azure 凭据登录。 然后删除为 Azure AI 搜索和 Azure AI 资源创建的资源组。
+1. 如果你已探索完 Azure AI Studio，请返回到 [Azure 门户](https://portal.azure.com) (`https://portal.azure.com`)，并根据需要使用 Azure 凭据登录。 然后删除你在其中预配了 Azure AI 搜索和 Azure AI 资源的资源组中的资源。
