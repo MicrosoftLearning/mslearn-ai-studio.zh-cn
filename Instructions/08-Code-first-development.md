@@ -51,13 +51,13 @@ lab:
 
 1. 首先，验证是否已安装[最新版本](https://github.com/Azure/azure-dev/releases/tag/azure-dev-cli_1.9.3)的 Azure Developer CLI。
     ```bash
-        azd version
+    azd version
     ```
 
 1. 接下来，从 VS Code 终端登录到 Azure 帐户。
 
     ```bash
-        azd auth login 
+    azd auth login 
     ```
 
 ## 为项目预配 Azure 资源
@@ -67,7 +67,7 @@ lab:
 1. 使用 azd 预配*和部署* AI 应用程序。
 
     ```bash
-        azd up
+    azd up
     ```
 
 1. 应看到以下提示。 使用以下指南做出响应：
@@ -144,7 +144,7 @@ Azure 门户可帮助管理项目的基础 Azure 资源。 Azure AI Studio 门�
 1. 现在，使用以下测试“**输入**”测试助手部署：
 
     ```bash
-      {"question": "tell me about your hiking shoes", "customerId": "2", "chat_history": []}
+    {"question": "tell me about your hiking shoes", "customerId": "2", "chat_history": []}
     ```
 
 应在输出组件中获取有效的 JSON 响应，如下所示。
@@ -193,13 +193,13 @@ Azure 门户可帮助管理项目的基础 Azure 资源。 Azure AI Studio 门�
 1. 验证是否已 在开发环境中安装了 **Promptflow 工具**。
 
     ```bash
-        pf version
+    pf version
     ```
 
 1. 使用 **pf 流测试**工具在本地测试 **contoso_chat** 灵活流应用程序，并参考以下示例问题。 请注意用于传递输入的命令的语法：
 
     ```bash
-        pf flow test --flow ./contoso_chat --inputs question="tell me about your jackets" customerId="3" chat_history=[]
+    pf flow test --flow ./contoso_chat --inputs question="tell me about your jackets" customerId="3" chat_history=[]
     ```
 
 你应该会收到类似以下内容的响应：
@@ -211,7 +211,7 @@ Azure 门户可帮助管理项目的基础 Azure 资源。 Azure AI Studio 门�
 1. 可以使用 `--ui` 标记跟踪执行详细信息，如下所示。
 
     ```bash
-        pf flow test --flow ./contoso_chat --inputs question="tell me about your jackets" customerId="3" chat_history=[] --ui
+    pf flow test --flow ./contoso_chat --inputs question="tell me about your jackets" customerId="3" chat_history=[] --ui
     ```
 
 此命令应在浏览器中（新选项卡中）启动一个**跟踪视图**，视图中的表格提供了有关该测试运行的概要详细信息，包括延迟和令牌使用情况。
@@ -316,7 +316,7 @@ requirements.txt
 此项目使用的模型和服务（例如 Azure AI 搜索）如果长期运行，可能会产生非同寻常的成本。 浏览完此 Azure AI AZD 模板后，应删除已创建的资源，以避免产生不必要的 Azure 成本。 可以在 VS Code 终端中运行以下命令来执行此操作：
 
 ```bash
-    azd down
+azd down
 ```
 
 这不仅颠倒预置和部署应用程序所采取的步骤，而且还需要采取额外的步骤来*清除*资源，否则这些资源可能会处于“软删除”状态，从而影响重用资源名称或回收模型配额的能力。 **此命令会在关闭期间提示你执行这些操作，因此请确保正确响应**。
