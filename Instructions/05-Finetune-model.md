@@ -75,9 +75,9 @@ lab:
 1. 在聊天窗口中，输入查询 `What can you do?`，请注意，即使未指定系统消息来指示模型回答与旅行相关的问题，该模型也已经理解它应该关注的内容。
 1. 尝试使用其他查询，例如 `Where should I go on holiday for my 30th birthday?`
 
-## 删除 Azure 资源
+## 清理
 
-当你完成对 Azure AI Studio 的探索时，应删除已创建的资源，以避免产生不必要的 Azure 成本。
+如果已完成对 Azure AI Studio 的探索，应删除已创建的资源，以避免产生不必要的 Azure 成本。
 
 - 导航到 Azure 门户，地址为 `https://portal.azure.com`[](https://portal.azure.com)。
 - 在 Azure 门户的**主页**上，选择“资源组”。
