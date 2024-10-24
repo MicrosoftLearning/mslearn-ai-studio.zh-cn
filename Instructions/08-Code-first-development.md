@@ -37,17 +37,18 @@ lab:
 
 要初始化开发环境，请执行以下步骤：
 
-1. **为存储库创建分支**：选择 GitHub 存储库页面右上角的“**分支**”按钮，在 GitHub 帐户中创建存储库的副本。
+1. 导航到 **contoso-chat** 存储库：`https://github.com/Azure-Samples/contoso-chat`
+1. 选择 contoso-chat GitHub 存储库页面右上角的“**创建分支**”按钮，在 GitHub 帐户中创建存储库的副本。
 1. 为存储库创建分支后，选择“**代码**”按钮，然后选择“**Codespaces**”。
 1. 选择“**+**”按钮，在已创建分支的存储库的主分支上新建 Codespace。
 
     ![创建 GitHub Codespaces](./media/create_codespaces.png)
 
-1. 几秒钟后，你将被重定向到新的浏览器选项卡，其中的 Codespaces 环境默认使用[附加的 Visual Studio Code 编辑器](https://code.visualstudio.com/docs/devcontainers/containers)进行设置。 你可以继续使用浏览器选项卡，也可以在左上角菜单中单击“**在 VS Code 桌面中打开**”按钮，从本地 Visual Studio Code 编辑器重新连接到正在运行的 Codespaces。
+1. 几秒钟后，你将被重定向到新的浏览器标签页，其中的 Codespaces 环境默认使用[附加的 Visual Studio Code 编辑器](https://code.visualstudio.com/docs/devcontainers/containers)进行设置。
 
 ## 将 VS Code 环境连接到 Azure
 
-下一步是将本地开发环境与要在其中部署项目的 Azure 订阅连接。 首先，在 Visual Studio Code IDE 中打开新终端。
+下一步是将开发环境与要在其中部署项目的 Azure 订阅连接起来。 首先，在 Codespaces 中运行的 VS Code 环境中打开新终端。
 
 1. 首先，验证是否已安装[最新版本](https://github.com/Azure/azure-dev/releases/tag/azure-dev-cli_1.9.3)的 Azure Developer CLI。
     ```bash
