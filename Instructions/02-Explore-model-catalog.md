@@ -20,7 +20,7 @@ Azure AI Studio 的模型目录充当中央存储库，可在其中浏览和使�
     - **订阅**：Azure 订阅
     - 资源组****：新资源组**
     - **位置**：选择“**帮助我选择**”，然后在“位置帮助程序”窗口中选择 **gpt-35-turbo**，并使用推荐的区域\*
-    - **连接 Azure AI 服务或 Azure OpenAI**：*创建新连接*
+    - **连接 Azure AI 服务或 Azure OpenAI**：（新建）*使用所选中心名称自动填充*
     - **连接 Azure AI 搜索**：跳过连接
 
     > \* Azure OpenAI 资源受区域配额限制在租户级别。 位置帮助程序中列出的区域包括本练习中使用的模型类型的默认配额。 随机选择区域可降低单个区域达到其配额限制的风险。 如果稍后在练习中达到配额限制，你可能需要在不同的区域中创建另一个资源。 详细了解 [每个区域的模型可用性](https://learn.microsoft.com/azure/ai-services/openai/concepts/models#gpt-35-turbo-model-availability)
