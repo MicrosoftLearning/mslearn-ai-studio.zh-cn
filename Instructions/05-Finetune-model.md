@@ -5,9 +5,13 @@ lab:
 
 # 在 Azure AI Studio 中针对聊天补全微调语言模型
 
-在本练习中，你将使用要用于自定义 Copilot 方案的 Azure AI Studio 微调语言模型。
+如果希望语言模型以某种方式运行，可以使用提示工程定义所需的行为。 要提高所需行为的一致性，可以选择微调模型，将其与提示工程方法进行比较，以评估哪种方法最适合你的需求。
 
-该练习大约需要 **45** 分钟。
+在本练习中，使用要用于自定义聊天应用程序场景的 Azure AI Studio 微调语言模型。 将微调后的模型与基础模型进行比较，以评估微调后的模型是否更符合需求。
+
+假设你在旅行社工作且正在开发一款聊天应用程序，以帮助人们规划假期。 目标是创建一款简单而吸引人的聊天工具，向他们推荐目的地和活动。 由于聊天未连接到任何数据源，因此它**不**应为酒店、航班或餐馆提供特定建议，以确保客户的信任。
+
+该练习大约需要 **60** 分钟。
 
 ## 在 Azure AI Studio 中创建 AI 中心和项目
 
@@ -18,27 +22,26 @@ lab:
 1. 在“创建新项目”向导中，使用以下设置创建项目****：
     - 项目名称****：项目的唯一名称**
     - **中心**：*使用以下设置创建新中心：*
-        - **中心名称**：唯一的名称**
-        - **订阅**：Azure 订阅
-        - 资源组****：新资源组**
-        - 位置****：从以下任何区域中进行随机选择******\*
-        - 美国东部 2
-        - 美国中北部
-        - 瑞典中部
-        - 瑞士北部
-    - **连接 Azure AI 服务或 Azure OpenAI**：*创建新连接*
+    - **中心名称**：唯一的名称**
+    - **订阅**：Azure 订阅
+    - 资源组****：新资源组**
+    - **位置**：选择以下区域之一：**美国东部 2**、**美国中北部**、**瑞典中部**、**瑞士西部**\*
+    - **连接 Azure AI 服务或 Azure OpenAI**：（新建）*使用所选中心名称自动填充*
     - **连接 Azure AI 搜索**：跳过连接
 
-    > \* Azure OpenAI 资源受区域配额限制在租户级别。 列出的区域包括本练习中使用的模型类型的默认配额。 随机选择区域可降低单个区域达到其配额限制的风险。 如果稍后在练习中达到配额限制，你可能需要在不同的区域中创建另一个资源。 详细了解 [每个区域的模型可用性](https://learn.microsoft.com/en-us/azure/ai-studio/concepts/fine-tuning-overview#azure-openai-models)
+    > \* Azure OpenAI 资源受区域配额限制在租户级别。 位置帮助程序中列出的区域包括本练习中使用的模型类型的默认配额。 随机选择区域可降低单个区域达到其配额限制的风险。 如果稍后在练习中达到配额限制，你可能需要在不同的区域中创建另一个资源。 详细了解[如何微调模型区域](https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/models?tabs=python-secure%2Cglobal-standard%2Cstandard-chat-completions#fine-tuning-models)
 
 1. 查看配置并创建项目。
 1. 等待创建项目。
 
 ## 微调 GPT-3.5 模型
 
-微调模型之前，需要一个数据集。
+由于微调模型需要一些时间才能完成，因此首先启动微调作业。 微调模型之前，需要一个数据集。
 
-1. 在本地将训练数据集另存为 JSONL 文件：https://raw.githubusercontent.com/MicrosoftLearning/mslearn-ai-studio/main/data/travel-finetune.jsonl
+1. 在本地将训练数据集另存为 JSONL 文件：[https://raw.githubusercontent.com/MicrosoftLearning/mslearn-ai-studio/main/data/travel-finetune.jsonl](https://raw.githubusercontent.com/MicrosoftLearning/mslearn-ai-studio/refs/heads/main/data/travel-finetune-hotel.jsonl)
+
+    > **备注**：设备可能默认将文件另存为 .txt 文件。 选择所有文件并移除 .txt 后缀，以确保将文件另存为 JSONL。
+
 1. 使用左侧菜单导航到“**工具**”部分下的“**微调**”页。
 1. 选择该按钮以添加新的微调模型，选择该 `gpt-35-turbo` 模型，然后选择“**确认**”。
 1. 使用以下配置**微调**该模型：
@@ -46,19 +49,66 @@ lab:
     - **模型后缀**：`ft-travel`
     - **Azure OpenAI 连接**：*选择创建中心时创建的连接*
     - **训练数据**：上传文件
+
+    <details>  
+    <summary><b>故障排除提示</b>：权限错误</summary>
+    <p>如果新建提示流时收到权限错误，请尝试执行以下操作进行故障排除：</p>
+    <ul>
+        <li>在 Azure 门户中，选择 AI 服务资源。</li>
+        <li>在 IAM 页上的“标识”选项卡中，确认它是系统分配的托管标识。</li>
+        <li>导航到关联的存储帐户。 在 IAM 页上，添加角色分配<em>存储 Blob 数据读取器</em>。</li>
+        <li>在“<strong>分配访问权限</strong>”下，选择“<strong>托管标识</strong>”、“<strong>++ 选择成员</strong>”，然后选择“<strong>所有系统分配的托管标识</strong>”。</li>
+        <li>查看并分配以保存新设置，然后重试上一步。</li>
+    </ul>
+    </details>
+
     - **上传文件**：选择在上一步骤中下载的 JSONL 文件。
-
-    > **提示**：无需等待数据处理完成，即可继续执行下一步。
-
     - **验证数据**：无
     - **任务参数**：*保留默认设置*
-1. 微调将开始，可能需要一些时间才能完成。
+1. 微调将启动，可能需要一些时间才能完成。
 
-> **备注**：微调和部署可能需要一些时间，因此可能需要定期回查才能完成下一步。
+> **备注**：微调和部署可能需要一些时间，因此可能需要定期回查。 等待期间，可以继续执行下一步。
+
+## 与基础模型聊天
+
+等待微调作业完成期间，让我们与基础 GPT 3.5 模型聊天，以评估其性能。
+
+1. 使用左侧菜单导航到“**组件**”部分下的“**部署**”页。
+1. 选择“**+ 部署模型**”按钮，然后选择“**部署基础模型**”选项。
+1. 部署 `gpt-35-turbo` 模型，该模型与微调时使用的模型类型相同。
+1. 部署完成后，导航到“**项目操场**”部分下的“**聊天**”页。
+1. 在设置部署中选择已部署的 `gpt-35-model` 基础模型。
+1. 在聊天窗口中，输入查询 `What can you do?`，然后查看响应。
+    答案非常笼统。 请记住，我们希望创建一款聊天应用程序，以激励人们旅行。
+1. 使用以下提示更新系统消息：
+    ```md
+    You are an AI assistant that helps people plan their holidays.
+    ```
+1. 选择“**保存**”，选择“**清除聊天**”，然后再次询问 `What can you do?`。助手可能会回复你，它可以帮助为你的旅行预订航班、酒店和出租车。 你想要避免这种行为。
+1. 使用新提示再次更新系统消息：
+
+    ```md
+    You are an AI travel assistant that helps people plan their trips. Your objective is to offer support for travel-related inquiries, such as visa requirements, weather forecasts, local attractions, and cultural norms.
+    You should not provide any hotel, flight, rental car or restaurant recommendations.
+    Ask engaging questions to help someone plan their trip and think about what they want to do on their holiday.
+    ```
+
+1. 选择“**保存**”，然后选择“**清除聊天**”。
+1. 继续测试聊天应用程序，以验证它不会提供任何未在检索到的数据中记录的信息。 例如，提出以下问题并浏览模型的答案：
+   
+    `Where in Rome should I stay?`
+    
+    `I'm mostly there for the food. Where should I stay to be within walking distance of affordable restaurants?`
+
+    `Give me a list of five bed and breakfasts in Trastevere.`
+
+    即使指示模型不提供酒店建议，它也可以为你提供酒店列表。 这是行为不一致的示例。 让我们探讨微调后的模型性能在这些情况下是否会更好。
+
+1. 导航到“**工具**”下的“**微调**”页，查找微调作业及其状态。 如果仍在运行，可以选择继续手动评估已部署的基础模型。 如果已完成，可以继续执行下一部分。
 
 ## 部署微调后模型
 
-成功完成微调后，即可部署模型。
+成功完成微调后，即可部署微调后的模型。
 
 1. 选择微调后模型。 选择“**指标**”选项卡并浏览微调指标。
 1. 使用以下配置部署微调后模型：
@@ -66,14 +116,28 @@ lab:
     - **部署类型**：标准
     - **每分钟令牌数速率限制（数千个）**：5K
     - **内容筛选器**：默认
+1. 等待部署完成，然后才能对其进行测试，这可能需要一段时间。
 
 ## 测试微调后模型
 
-部署微调模型后，可以像测试任何其他已部署的模型一样测试模型。
+部署微调后的模型后，可以像测试已部署的基础模型一样测试该模型。
 
 1. 部署准备就绪后，导航到微调后模型并选择“**在操场中打开**”。
-1. 在聊天窗口中，输入查询 `What can you do?`，请注意，即使未指定系统消息来指示模型回答与旅行相关的问题，该模型也已经理解它应该关注的内容。
-1. 尝试使用其他查询，例如 `Where should I go on holiday for my 30th birthday?`
+1. 使用以下说明更新系统消息：
+
+    ```md
+    You are an AI travel assistant that helps people plan their trips. Your objective is to offer support for travel-related inquiries, such as visa requirements, weather forecasts, local attractions, and cultural norms.
+    You should not provide any hotel, flight, rental car or restaurant recommendations.
+    Ask engaging questions to help someone plan their trip and think about what they want to do on their holiday.
+    ```
+
+1. 测试微调后的模型，以评估其行为现在是否更一致。 例如，再次提出以下问题并浏览模型的答案：
+   
+    `Where in Rome should I stay?`
+    
+    `I'm mostly there for the food. Where should I stay to be within walking distance of affordable restaurants?`
+
+    `Give me a list of five bed and breakfasts in Trastevere.`
 
 ## 清理
 
