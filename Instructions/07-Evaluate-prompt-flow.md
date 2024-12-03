@@ -1,17 +1,17 @@
 ---
 lab:
-  title: 在 Azure AI Studio 中评估自定义助手的性能
+  title: 在 Azure AI Foundry 中评估自定义 copilot 的性能
 ---
 
-# 在 Azure AI Studio 中评估自定义助手的性能
+# 在 Azure AI Foundry 中评估自定义 copilot 的性能
 
-在本练习中，你将探索内置和自定义评估，以使用 Azure AI Studio 评估和比较 AI 应用程序的性能。
+在本练习中，将探索内置和自定义评估，以使用 Azure AI Foundry 门户评估和比较 AI 应用程序的性能。
 
 该练习大约需要 **30** 分钟。
 
-## 在 Azure AI Studio 中创建 AI 中心和项目
+## 在 Azure AI Foundry 门户中创建 AI 中心和项目
 
-首先，在 Azure AI 中心内创建 Azure AI Studio 项目：
+首先，在 Azure AI 中心内创建 Azure AI Foundry 项目：
 
 1. 在 Web 浏览器中，使用 Azure 凭据打开 [https://ai.azure.com](https://ai.azure.com) 并登录。
 1. 选择“开始”页，然后选择“+ 新建项目”。********
@@ -30,9 +30,10 @@ lab:
 
 ## 部署 GPT 模型
 
-要在提示流中使用语言模型，首先需要部署模型。 Azure AI Studio 让你能够部署可在流中使用的 OpenAI 模型。
+要在提示流中使用语言模型，首先需要部署模型。 Azure AI Foundry 门户允许部署可在流中使用的 OpenAI 模型。
 
-1. 在左侧导航窗格中的“组件”下，选择“部署”页。********
+1. 使用左侧菜单导航到“**我的资源**”部分下的“**模型 + 终结点**”页。
+1. 选择“**+ 部署模型**”按钮，然后选择“**部署基础模型**”选项。
 1. 在“**部署模型**”向导中选择“**自定义**”，并使用以下设置新建 **gpt-35-turbo** 模型部署：
     - 部署名称****：模型部署的唯一名称**
     - **部署类型**：标准
@@ -62,12 +63,12 @@ lab:
    5. Encourage the user to ask follow-up questions for further assistance.
    ```
 
-1. 选择“保存”。
-1. 在聊天窗口中，输入查询：`What can you do?`，以验证语言模型是否按预期方式运行。
+1. 选择“应用更改”。
+1. 在聊天（历史记录）窗口中，输入查询：`What can you do?`，以验证语言模型是否按预期运行。
 
 现在，已部署的模型包含了更新后的系统消息，可以评估模型。
 
-## 在 Azure AI Studio 中手动评估语言模型
+## 在 Azure AI Studio Foundry 门户中手动评估语言模型
 
 可以根据测试数据手动审阅模型响应。 通过手动审阅，可以每次测试一个不同的输入，以评估模型是否按预期方式执行。
 
@@ -112,7 +113,13 @@ lab:
 
 ## 使用内置指标评估 Copilot
 
-使用聊天流创建 Copilot 后，可以通过执行批处理运行并使用内置指标评估流的性能来评估流。
+使用提示流创建聊天应用程序后，可以通过执行批处理运行并使用内置指标评估流的性能来评估流。
+
+![用于评估的输入数据集的构造图。](./media/diagram-dataset-evaluation.png)
+
+为了评估聊天流，提供的用户查询和聊天响应将作为评估的输入。
+
+为了节省时间，我们创建了批处理输出数据集，其中包含由提示流处理的多个输入的结果。 每个结果都存储在后续步骤将进行评估的数据集中。
 
 1. 选择“**自动运行评估**”选项卡，并使用以下设置创建**新评估**：<details>  
       <summary><b>故障排除提示</b>：权限错误</summary>
@@ -130,7 +137,7 @@ lab:
     - **评估名称**：输入唯一名称**
     - 选择**下一个**
     - **选择要评估的数据**：添加数据集
-        - 下载 https://raw.githubusercontent.com/MicrosoftLearning/mslearn-ai-studio/main/data/travel-qa.jsonl JSONL 文件并将其上传到 UI。
+        - 下载[验证数据集](https://raw.githubusercontent.com/MicrosoftLearning/mslearn-ai-studio/main/data/travel-qa.jsonl) (`https://raw.githubusercontent.com/MicrosoftLearning/mslearn-ai-studio/main/data/travel-qa.jsonl`)，将其保存为 JSONL 文件并上传到 UI。
     - 选择**下一个**
     - **选择指标**：一致性、流畅性
     - 连接****：*你的 AI 服务连接*
@@ -145,7 +152,7 @@ lab:
 
 ## 删除 Azure 资源
 
-当你完成对 Azure AI Studio 的探索时，应删除已创建的资源，以避免产生不必要的 Azure 成本。
+完成对 Azure AI Foundry 的探索后，应删除已创建的资源，以避免产生不必要的 Azure 成本。
 
 - 导航到 Azure 门户，地址为 `https://portal.azure.com`[](https://portal.azure.com)。
 - 在 Azure 门户的**主页**上，选择“资源组”。
