@@ -5,7 +5,7 @@ lab:
 
 # 使用代码优先开发工具生成自定义 Copilot
 
-在本练习中，将克隆并部署 Azure Developer CLI 模板，该模板预配 AI 项目并将其[部署到 Azure AI Studio 上的联机终结点](https://learn.microsoft.com/azure/developer/azure-developer-cli/azure-ai-ml-endpoints?WT.mc_id=academic-140829-cacaste) 。 然后，以它为起点，使用 Azure AI 和代码优先体验生成自己的自定义 Copilot。
+在本练习中，你将克隆并部署 Azure Developer CLI 模板，该模板可预配 AI 项目并将其[部署到 Azure AI Foundry 上的联机终结点](https://learn.microsoft.com/azure/developer/azure-developer-cli/azure-ai-ml-endpoints?WT.mc_id=academic-140829-cacaste)。 然后，以它为起点，使用 Azure AI 和代码优先体验生成自己的自定义 Copilot。
 
 该练习大约需要 **90** 分钟。
 
@@ -21,7 +21,7 @@ lab:
 
 要开始使用 Azure Developer CLI AI 项目模板，请导航到 [Azure Developer CLI 集合的 Azure AI 模板](https://learn.microsoft.com/collections/5pq0uompdgje8d/?WT.mc_id=academic-140829-cacaste)。 通过浏览集合，可以查找按技术和用例分组的多个项目，包括多模式和多代理项目示例、类似 Copilot 的项目以及集成不同框架和 Azure 服务的示例。
 
-在本练习中，你将以**[使用 Azure AI Studio 和 PromptFlow (Python) 的 Contoso Chat Retail Copilot](https://aka.ms/contoso-retail-sample)** 项目模板作为起点。 此项目模板是一种代码优先体验，它使用 Prompty 和 PromptFlow 生成自定义 Copilot（聊天 AI），此 Copilot 可集成到名为 Contoso Outdoors 的虚构公司的零售网站（聊天 UI）中。
+在本练习中，将以**[使用 Azure AI Foundry 和 PromptFlow (Python) 的 Contoso Chat Retail Copilot](https://aka.ms/contoso-retail-sample)** 项目模板作为起点。 此项目模板是一种代码优先体验，它使用 Prompty 和 PromptFlow 生成自定义 Copilot（聊天 AI），此 Copilot 可集成到名为 Contoso Outdoors 的虚构公司的零售网站（聊天 UI）中。
 
 ![Contoso 聊天 UI/UX](./media/contoso_outdoors_website.png)
 
@@ -83,7 +83,7 @@ lab:
 使用 azd 预配和部署 AI 应用程序可能需要 10 分钟或更多时间才能完成。 可以通过以下方式跟踪进度：
 
 - 在 [Azure 门户](https://ms.portal.azure.com/)中查看详细进度。 搜索与环境名称对应的资源组。 在边栏中选择“**部署**”选项，然后监视所创建资源的部署状态。
-- 访问 [Azure AI Studio](https://ai.azure.com) 门户。 使用 Azure 帐户登录。 搜索与上述资源组对应的 AI 中心（可能需要刷新几次）。 选择列出的 AI 项目，然后在其边栏中选择“**部署**”以跟踪模型和聊天应用程序部署的状态。
+- 访问 [Azure AI Foundry 门户](https://ai.azure.com)门户。 使用 Azure 帐户登录。 搜索与上述资源组对应的 AI 中心（可能需要刷新几次）。 选择列出的 AI 项目，然后在其边栏中选择“**部署**”以跟踪模型和聊天应用程序部署的状态。
 
 让我们探索如何使用 Azure 门户验证资源的预配。
 
@@ -92,13 +92,13 @@ lab:
 
     ![Azure 门户资源组概述](./media/azure-portal-resource-group.png)
 
-1. 首先，验证是否已创建关键的 [Azure AI Studio 体系结构](https://learn.microsoft.com/azure/ai-studio/concepts/architecture)资源。 下图更详细地介绍了这些资源为 AI 应用程序提供的内容。
+1. 首先，验证是否已创建关键的 [Azure AI Foundry 体系结构](https://learn.microsoft.com/azure/ai-studio/concepts/architecture)资源。 下图更详细地介绍了这些资源为 AI 应用程序提供的内容。
 
     - **Azure AI 中心**：顶级 Azure 资源。 为团队提供协作环境。
     - **Azure AI 项目**：中心的子级。 对用于业务流程、自定义的应用组件进行分组。
     - **Azure AI 服务**：管理模型终结点。
 
-    ![Azure AI Studio 体系结构](./media/resource-provider-connected-resources.svg)
+    ![Azure AI Foundry 体系结构](./media/resource-provider-connected-resources.svg)
 
 1. 接下来，让我们验证一下，我们是否已预配两个用于实现 [检索增强生成](https://learn.microsoft.com/azure/ai-studio/concepts/retrieval-augmented-generation)设计模式的关键资源，方法是存储产品和客户数据进行查询驱动的检索。
 
@@ -115,11 +115,11 @@ lab:
 
 1. 最后但很重要的一点是，你会注意到类型为**机器学习联机部署**的新资源。 这是与已部署的 Azure AI 项目终结点（用于聊天 Copilot）相对应的资源。
 
-## 使用 Azure AI Studio 验证部署
+## 使用 Azure AI Foundry 验证部署
 
-Azure 门户可帮助管理项目的基础 Azure 资源。 Azure AI Studio 门户可从模型选择到应用程序部署，以端到端方式帮助*生成和管理* AI 项目本身。 该 `azd up` 命令应已完成从预配所需模型到部署和托管 Copilot API 终结点以供使用的整个过程。 让我们验证应用程序是否按预期运行。
+Azure 门户可帮助管理项目的基础 Azure 资源。 Azure AI Foundry 门户有助于以端到端方式*生成和管理*包括模型选择和应用程序部署在内的 AI 项目本身。 该 `azd up` 命令应已完成从预配所需模型到部署和托管 Copilot API 终结点以供使用的整个过程。 让我们验证应用程序是否按预期运行。
 
-1. 访问 [Azure AI Studio](https://ai.azure.com/manage) 中的“**管理**”页，查看订阅中的所有 Azure AI 中心。
+1. 访问 [Azure AI Foundry 门户](https://ai.azure.com/manage)中的“**管理**”页，查看订阅中的所有 Azure AI 中心。
 1. 选择资源组的中心以查看其中的所有 Azure AI 项目。
 1. 在中心中选择默认 AI 项目，然后在左侧菜单中选择“**部署**”。
 1. 在“**模型部署**”下，验证是否具有 Azure OpenAI 连接，包括以下部署：
@@ -131,13 +131,13 @@ Azure 门户可帮助管理项目的基础 Azure 资源。 Azure AI Studio 门�
 
     ![Azure AI 项目部署](./media/azure-ai-project-deployment.png)
 
-## 使用 Azure AI Studio 测试部署（在云端）
+## 使用 Azure AI Foundry 测试部署（在云端）
 
-要验证已部署的助手是否正常工作，请使用 Azure AI Studio 中的内置测试操场功能。
+要验证已部署的 Copilot 是否正常工作，请使用 Azure AI Foundry 门户中的内置测试操场功能。
 
 ![聊天部署详细信息](./media/chat-deployment-details.png)
 
-1. 在 Azure AI Studio 的“**应用部署**”列表中，选择 **chat-deployment-xxxx** 部署。
+1. 在 Azure AI Foundry 门户的“**应用部署**”列表中，选择“**chat-deployment-xxxx**”部署。
 1. 在已部署的聊天应用程序的“**详细信息**”页上，选择“**测试**”选项卡以获取测试界面。
 
     请注意，“**详细信息**”选项卡还具有 `Target URI` 和 `Key` 值，你可以将这些值用于其他前端应用程序（例如 Contoso Outdoor 网站），从而为实际用户交互集成此聊天助手。
