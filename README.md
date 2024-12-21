@@ -1,6 +1,6 @@
-# Azure AI Studio 练习
+# Azure AI Foundry 练习
 
-此存储库包含相关说明和资源，为 [Azure AI Studio 上的 Microsoft Learn 模块](https://docs.microsoft.com/training)中的实践练习提供支持。
+此存储库包含相关说明和资源，为 [Azure AI Foundry 门户上的 Microsoft Learn 模块](https://learn.microsoft.com/en-us/training/paths/create-custom-copilots-ai-studio/)中的实践练习提供支持。
 
 ## 报告问题
 
