@@ -4,7 +4,7 @@ permalink: index.html
 layout: home
 ---
 
-# 使用 Azure AI Studio 开发生成式 AI 应用程序
+# 在 Azure AI Foundry 门户中开发生成式 AI 应用
 
 以下练习旨在为你提供动手学习体验，在其中可浏览开发人员用来生成基于聊天的“Copilot”等生成式 AI 应用程序的常见模式和技术，并了解如何使用 Azure AI 服务（特别是 Azure OpenAI 服务和 Azure AI Studio）实现这些模式。
 
