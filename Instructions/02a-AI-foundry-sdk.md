@@ -55,7 +55,7 @@ lab:
 
 > **提示**：可以选择使用 Python 或 Microsoft C# 开发解决方案。 按照所选语言的相应部分中的说明进行操作。
 
-### 准备应用程序配置
+### 克隆应用程序存储库
 
 1. 在 Azure AI Foundry 门户中，查看项目的“**概述**”页。
 1. 在“**项目详细信息**”区域中，记下**项目连接字符串**。 你将使用此连接字符串连接到客户端应用程序中的项目。
@@ -74,6 +74,8 @@ lab:
     rm -r mslearn-ai-foundry -f
     git clone https://github.com/microsoftlearning/mslearn-ai-studio mslearn-ai-foundry
     ```
+
+### 准备应用程序配置
 
 > **备注**：按照所选编程语言的步骤操作。
 
