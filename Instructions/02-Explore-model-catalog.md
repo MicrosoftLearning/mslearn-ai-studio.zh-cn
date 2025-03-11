@@ -8,7 +8,7 @@ lab:
 
 Azure AI Foundry 模型目录充当中央存储库，在其中可浏览和使用各种模型，从而为创建生成式 AI 方案提供便利。
 
-在本练习中，你将探索 Azure AI Foundry 门户中的模型目录，并比较有助于解决问题的生成式 AI 应用程序的潜在模型。
+在本练习中，你将探索 Azure AI Foundry 门户中的模型目录。
 
 该练习大约需要 **25** 分钟。
 
@@ -18,168 +18,119 @@ Azure AI 中心会提供协作式工作区，可在其中定义一个或多个�
 
 1. 在 Web 浏览器中打开 [Azure AI Foundry 门户](https://ai.azure.com)，网址为：`https://ai.azure.com`，然后使用 Azure 凭据登录。
 
-1. 在主页中，选择“**+ 创建项目**”。
-1. 在“**创建项目**”向导中，输入合适的项目名称（例如 `my-ai-project`），然后查看为支持项目而自动创建的 Azure 资源。
-1. 选择“**自定义**”并为中心指定以下设置：
-    - **中心名称**：*唯一名称 - 例如`my-ai-hub`*
+1. 在主页中，选择“**+ 创建项目**”。 在“**创建项目**”向导中，可以看到将使用项目自动创建的所有 Azure 资源，也可以在选择“**创建**”之前先选择“**自定义**”以自定义以下设置：
+
+    - **中心名称**：唯一的名称**
     - **订阅**：Azure 订阅
-    - **资源组**：*新建资源组并提供唯一名称（例如 `my-ai-resources`），或选择现有资源组*
-    - **位置**：选择“**帮助我选择**”，然后在“位置帮助程序”窗口中选择“**gpt-4**”，并使用推荐的区域\*
-    - **连接 Azure AI 服务或 Azure OpenAI**：*新建 AI 服务资源并提供适当的名称（例如 `my-ai-services`）或使用现有资源*
+    - 资源组****：新资源组**
+    - **位置**：选择“**帮助我选择**”，然后在“位置帮助程序”窗口中选择 **gpt-35-turbo**，并使用推荐的区域\*
+    - **连接 Azure AI 服务或 Azure OpenAI**：（新建）*使用所选中心名称自动填充*
     - **连接 Azure AI 搜索**：跳过连接
 
-    > \*模型配额在租户级别受区域配额的限制。 如果稍后在练习中达到配额限制，你可能需要在不同的区域中创建另一个资源。
+    > \* Azure OpenAI 资源受区域配额限制在租户级别。 位置帮助程序中列出的区域包括本练习中使用的模型类型的默认配额。 随机选择区域可降低单个区域达到其配额限制的风险。 如果稍后在练习中达到配额限制，你可能需要在不同的区域中创建另一个资源。 详细了解 [每个区域的模型可用性](https://learn.microsoft.com/azure/ai-services/openai/concepts/models#gpt-35-turbo-model-availability)
 
-1. 选择“**下一步**”查看配置。 然后，选择“**创建**”并等待该进程完成。
-1. 创建项目后，关闭显示的所有使用技巧，并查看 Azure AI Foundry 门户中的项目页面，如下图所示：
+1. 如果已选择“**自定义**”，请选择“**下一步**”并查看配置。
+1. 选择“**创建**”并等待该进程完成。
+   
+    创建 Azure AI 中心和项目后，它应如下图所示：
 
-    ![Azure AI Foundry 门户中 Azure AI 项目详细信息的屏幕截图。](./media/ai-foundry-project.png)
+    ![Azure AI Foundry 门户中 Azure AI 中心详细信息的屏幕截图。](./media/azure-ai-resource.png)
 
-## 配置 Azure AI 推理服务部署
+1. 打开新的浏览器标签页（Azure AI Foundry 门户标签页保持打开状态），浏览到 Azure 门户（网址为：[https://portal.azure.com](https://portal.azure.com?azure-portal=true)），如果出现提示，请使用 Azure 凭据登录。
+1. 浏览到在其中创建了 Azure AI 中心的资源组，并查看已创建的 Azure 资源。
 
-在 Azure AI Foundry 门户中部署模型有多种选项。 在本练习中，你将使用 **Azure AI 模型推理**部署选项，该选项支持 Azure AI Foundry 模型目录中的 *Azure OpenAI* 模型和“*模型即服务*”模型。 由于所有模型都部署到 Azure AI Services 资源托管的通用终结点，因此在测试模型时可以轻松地在模型之间切换，以便比较行为和性能。
+    ![Azure 门户中 Azure AI 中心和相关资源的屏幕截图。](./media/azure-portal.png)
 
-1. 在 Azure AI Foundry 项目页面右上角的工具栏中，使用“**预览功能**”图标显示预览功能。
-1. 启用“**将模型部署到 Azure AI 模型推理服务**”功能。 然后关闭“**预览功能**”窗格。
+1. 返回到 Azure AI Foundry 门户浏览器标签页。
+1. 在 Azure AI 中心页面左侧的窗格中查看每个页面，并记下可以创建和管理的项目。 在“**管理中心**”页中，可以在中心或项目下选择“**已连接资源**”，并观察是否已创建与 Azure OpenAI 和 AI 服务的连接。
+1. 如果位于“管理中心”页面，请选择“**转到项目**”。
 
-## 查看模型详细信息和基准
+## 使用模型基准选择模型
 
-为了帮助你选择模型，可以浏览模型说明和基准，以确定哪种模型最符合需求。
+部署模型之前，可以探索模型基准，以确定哪种模型最适合你的需求。
 
-1. 在 Azure AI Foundry 项目门户的左侧导航窗格中，选择“**模型目录**”。
-1. 在模型目录主页中，搜索 `gpt-4` 以查找 **gpt-4** 聊天完成模型。
+假设要创建一个充当旅行助理的自定义 Copilot。 具体而言，你希望 Copilot 为旅行相关的查询提供支持，如签证要求、天气预报、当地景点和文化规范。
 
-    ![模型目录中搜索“gpt-4”的屏幕截图。](./media/model-catalog-search-gpt4.png)
+Copilot 需要提供事实准确的信息，因此基础性很重要。 除此之外，你希望 Copilot 提供的答案易于阅读和理解。 因此，还需要选取在流畅度和连贯性方面得分较高的模型。
 
-1. 选择 **gpt-4** 模型并查看其详细信息。 阅读说明并查看页面上提供的其他信息。
-
-    ![gpt-4 模型详细信息页的屏幕截图。](./media/gpt4-details.png)
-
-1. 在 **gpt-4** 页上，查看“**基准**”选项卡，了解模型在一些标准性能基准中与其他在类似场景中使用的模型的比较。
-
-    ![gpt-4 模型基准页的屏幕截图。](./media/gpt4-benchmarks.png)
-
-1. 使用 **gpt-4** 页标题旁边的后退箭头（**&larr;**），返回到模型目录主页。
-1. 在模型目录中，搜索 `Phi-3.5-mini-instruct` 并查看 **Phi-3.5-mini-instruct** 模型的详细信息和基准。
-
-## 比较模型
-
-你已查看了两个不同的模型，这两种模型都可用于实现生成式 AI 聊天应用程序。 现在，让我们直观地比较这两个模型的指标。
-
-1. 返回“**模型目录**”主页。
-1. 选择“**比较模型**”。 模型比较的可视化图表与一系列常见模型一起显示。
-
-    ![模型比较页面的屏幕截图。](./media/compare-models.png)
-
-1. 在左侧的“**模型比较**”窗格中，请注意，可以选择常用任务，例如*问题解答*，以便自动为特定任务选择常用模型。
-1. 使用“**清除所有模型**” (&#128465;) 图标，移除所有预先选择的模型。
-1. 使用 **+ 模型比较**按钮，将 **gpt-4** 模型添加到列表中。 然后使用同一按钮将 **Phi-3.5-mini-instruct** 模型添加到列表中。
-1. 查看图表，该图表根据“**质量索引**”（指示模型质量的标准化分数）和“**成本**”比较模型。 可以通过将鼠标悬停在图表中表示它的点上来查看模型的特定值。
-
-    ![gpt-4 和 Phi-3.5-mini-instruct 的模型比较图表的屏幕截图。](./media/comparison-chart.png)
-
-1. 在“**X 轴**”下拉菜单的“**质量**”下，选择以下指标并观察每个生成的图表，然后再切换到下一个图表：
-    - 准确性
+1. 在 Azure AI Foundry 项目门户中，使用左侧菜单导航到“**模型目录**”。
+    在“目录”页中，选择“**与基准比较**”。 在“模型基准”页中，可以找到已绘制的图表，并比较不同的模型。
+1. 选择“**+ 要比较的模型**”，并将 **gpt-4-32k** 和 **gpt-4** 添加到指标图表。 在“**X 轴**”下拉菜单的“**质量**”下，选择以下指标并观察每个生成的图表，然后再切换到下一个图表：
     - 一致性
     - 流畅度
-    - 相关性
+    - 真实性
+1. 浏览结果时，可以尝试回答以下问题：
+    - 是否注意到 GPT-3.5 和 GPT-4 模型之间的性能差异？
+    - 同一模型的版本之间是否存在差异？
+    - GPT-4 的 32k 变体与基础模型有何不同？
 
-## 部署模型
+在 Azure OpenAI 集合中，可以在 GPT-3.5 和 GPT-4 模型之间进行选择。 让我们部署这两个模型，并探索它们如何针对你的用例进行比较。
+
+## 部署 Azure OpenAI 模型
 
 通过模型基准探索完选项后，现在可以部署语言模型。 可以浏览模型目录并从中进行部署，也可以通过“**部署**”页部署模型。 让我们探讨这两个选项。
 
-### 从*模型目录*部署模型
+### 从模型目录部署模型
 
-首先从模型目录部署模型。 如果要查看多个可用模型，则可以首选此选项。
+首先从模型目录部署模型。 如果要筛选所有可用模型，则可以首选此选项。
 
-1. 返回“**模型目录**”主页。
-1. 搜索并选择 `gpt-4` 模型，就像之前所做的那样。
-1. 在**gpt-4**页面上，选择“**部署**”，并在部署详细信息中选择“**自定义**”，使用以下设置部署模型：
-    - **部署名称**：*模型部署的唯一名称，例如 `gpt-4-model`*
-    - **部署类型**：全局标准
+1. 使用左侧菜单导航到“**模型目录**”页。
+1. 在部署详细信息中选择“**自定义**”，并使用以下设置搜索并部署由 Azure AI 策划的 `gpt-35-turbo` 模型：
+   
+    - 部署名称****：模型部署的唯一名称**
+    - **部署类型**：标准
     - **模型版本**：*选择默认版本*
-    - **连接的 AI 资源**：*Azure OpenAI 资源连接*
+    - **AI 资源**：*选择先前创建的资源*
     - **每分钟令牌数速率限制（数千个）**：5K
     - **内容筛选器**：DefaultV2
     - **启用动态配额**：已禁用
-      
-    > **注意**：减少 TPM 有助于避免过度使用正在使用的订阅中可用的配额。 5,000 TPM 对本练习中使用的数据是足够的。
 
-1. 等待部署的“**预配状态**”为“**成功**”。
+    > **备注**：如果当前 AI 资源位置没有可用于要部署模型的配额，系统会要求你选择其他位置，以便新建 AI 资源并连接到项目。
 
-### 通过“*模型 + 终结点*”部署模型
+### 通过“模型 + 终结点”部署模型
 
 如果已确切知道要部署的模型，则可以通过“**模型 + 终结点**”执行此操作。
 
-1. 在左侧导航栏中的“**我的资产**”部分，选择“**模型 + 终结点**”页。
-1. 在“**模型部署**”选项卡中的“**+ 部署模型**”下拉列表中，选择“**部署基础模型**”。 然后搜索 `Phi-3.5-mini-instruct` 并确认选择。
-1. 同意模型许可证。
-1. 使用以下设置，部署**Phi-3.5-mini-instruct**模型：
-    - **部署名称**：*模型部署的唯一名称，例如 `phi-35-model`*
-    - **部署类型**：全局标准
-    - **部署详细信息**：*使用默认设置*
-
-1. 等待部署的“**预配状态**”为“**成功**”。
+1. 使用左侧菜单导航到“**我的资源**”部分下的“**模型 + 终结点**”页。
+1. 在“**模型部署**”选项卡的部署详细信息中，选择“**自定义**”并使用以下设置部署新的基础模型：
+    - **模型**：GPT 4
+    - 部署名称****：模型部署的唯一名称**
+    - **部署类型**：标准
+    - **模型版本**：*选择默认版本*
+    - **AI 资源**：*选择先前创建的资源*
+    - **每分钟令牌数速率限制（数千个）**：5K
+    - **内容筛选器**：DefaultV2
+    - **启用动态配额**：已禁用
 
 ## 在聊天操场中测试模型
 
-现在有两种要比较的模型，让我们看看这些模型在对话交互中的行为。
+现在我们有两个模型要比较，让我们看看这些模型在对话交互中的行为。
 
-### 准备聊天
+1. 使用左侧菜单导航到“**操场**”页。
+1. 在“**聊天操场**”中，选择你的 GPT-3.5 部署。
+1. 在聊天窗口中，输入查询 `What can you do?`，然后查看响应。
+    答案非常笼统。 请记住，我们希望创建可用作旅行助理的自定义 Copilot。 可以在提出的问题中指定所需的帮助类型。
+1. 在聊天窗口中，输入查询 `Imagine you're a travel assistant, what can you help me with?` 答案已更具体。 你可能不希望最终用户每次与 Copilot 交互时都提供必要的上下文。 要添加全局说明，可以编辑系统消息。
+1. 在“**设置**”下，使用以下提示更新“**提供模型说明和上下文**”字段：
 
-1. 在导航栏中，选择“**操场**”。 然后选择“**聊天操场**”。
-1. 在“**设置**”窗格中的“**授予模型指令和上下文**”字段中，将系统提示设置为 `You are an AI assistant that helps solve problems.`
-1. 选择“**应用更改**”。
+   ```
+   You are an AI travel assistant that helps people plan their trips. Your objective is to offer support for travel-related inquiries, such as visa requirements, weather forecasts, local attractions, and cultural norms.
+   ```
 
-### 与 *gpt-4* 模型聊天
+1. 选择“应用更改”****。
+1. 在聊天窗口中，输入查询 `What can you do?` 并查看新响应。 观察它与之前收到的答案有何区别。 答案现在特定于旅行。
+1. 通过提出以下问题继续对话：`I'm planning a trip to London, what can I do there?` Copilot 提供大量与旅行相关的信息。 你可能仍希望改进输出。 例如，你可能希望答案更简洁。
+1. 通过在消息末尾添加 `Answer with a maximum of two sentences.` 来更新系统消息。 应用更改，清除聊天，并提出以下问题再次测试聊天： `I'm planning a trip to London, what can I do there?` 你可能还希望 Copilot 继续对话，而不是简单地回答问题。
+1. 在提示末尾添加 `End your answer with a follow-up question.` 以更新模型的上下文。 保存更改并通过提出以下问题再次测试聊天：`I'm planning a trip to London, what can I do there?`
+1. 将**部署**更改为 GPT-4 模型，并重复本部分中的所有步骤。 请注意模型在其输出中有何不同。
+1. 最后，在查询 `Who is the prime minister of the UK?` 上测试这两个模型。 此问题的性能与模型的基础性（响应是否真实准确）相关。 性能是否与模型基准得出的结论相关？
 
-在“**设置**”窗格中，选择 *gpt-4* 模型。
-1. 在查询窗口中输入以下查询
-
-    ```
-    I have a fox, a chicken, and a bag of grain that I need to take over a river in a boat. I can only take one thing at a time. If I leave the chicken and the grain unattended, the chicken will eat the grain. If I leave the fox and the chicken unattended, the fox will eat the chicken. How can I get all three things across the river without anything being eaten?
-    ```
-
-1. 查看响应。 然后输入以下跟进查询：
-
-    ```
-    Explain your reasoning.
-    ```
-
-### 使用 *Phi-3.5* 模型的聊天
-
-1. 在“**设置**”窗格中，选择 *Phi-3.5* 模型。
-1. 请确保在重复之前用于测试 gpt-4 模型的相同提示之前启动新的聊天会话。
-1. 在查询窗口中输入以下查询
-
-    ```
-    I have a fox, a chicken, and a bag of grain that I need to take over a river in a boat. I can only take one thing at a time. If I leave the chicken and the grain unattended, the chicken will eat the grain. If I leave the fox and the chicken unattended, the fox will eat the chicken. How can I get all three things across the river without anything being eaten?
-    ```
-
-1. 查看响应。 然后输入以下跟进查询：
-
-    ```
-    Explain your reasoning.
-    ```
-
-### 执行进一步比较
-
-1. 用两种模型尝试以下谜题，让模型解释它们的推理（正确答案是40！）：
-
-    ```
-    I have 53 socks in my drawer: 21 identical blue, 15 identical black and 17 identical red. The lights are out, and it is completely dark. How many socks must I take out to make 100 percent certain I have at least one pair of black socks?
-    ```
-
-## 反思模型
-
-已比较了两种模型，这两种模型在生成适当的响应和成本方面可能有所不同。 在任何生成式场景中，都需要找到一种模型，既要适合你需要它执行的任务，又要满足你期望它处理的请求数量所需的使用成本。
-
-模型目录中提供的详细信息和基准，以及直观比较模型的能力，为识别生成式 AI 解决方案的候选模型提供了一个有用的起点。 然后，可以在聊天操场中使用各种系统和用户提示测试候选模型。
+探索这两个模型后，请考虑现在为用例选择哪种模型。 起初，模型输出可能有所不同，你可能更喜欢一个模型而不是另一个模型。 但是，更新系统消息后，你可能会注意到差异很小。 从成本优化的角度来看，你可以选择 GPT-3.5 模型而不是 GPT-4 模型，因其性能非常相似。
 
 ## 清理
 
 如果已完成对 Azure AI Foundry 门户的探索，则应删除在本练习中创建的资源，以避免产生不必要的 Azure 成本。
 
-1. 打开[Azure 门户](https://portal.azure.com)并查看在其中部署了本练习中使用的资源的资源组的内容。
+1. 返回到包含 Azure 门户的浏览器标签页（或在新的浏览器标签页中重新打开 [Azure 门户](https://portal.azure.com?azure-portal=true) ），查看在其中部署了本练习中使用的资源的资源组的内容。
 1. 在工具栏中，选择“删除资源组”****。
 1. 输入资源组名称，并确认要删除该资源组。
