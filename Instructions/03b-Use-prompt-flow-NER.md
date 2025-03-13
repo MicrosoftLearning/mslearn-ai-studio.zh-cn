@@ -1,9 +1,10 @@
 ---
 lab:
-  title: 在 Azure AI Foundry 门户中对命名实体识别 (NER) 使用提示流
+  title: 对命名实体识别 (NER) 使用提示流
+  description: 生成式 AI 不仅适用于聊天应用 - 了解如何在必须从文本中提取命名实体的文本分析场景中使用提示流。
 ---
 
-# 在 Azure AI Foundry 门户中对命名实体识别 (NER) 使用提示流
+# 对命名实体识别 (NER) 使用提示流
 
 从文本中提取有价值的信息称为命名实体识别 (NER)。 实体是给定文本中你感兴趣的关键字。
 
@@ -124,8 +125,10 @@ lab:
 
    user:
    
+   {% raw %}
    Entity type: {{entity_type}}
    Text content: {{text}}
+   {% endraw %}
    Entities:
    ```
 

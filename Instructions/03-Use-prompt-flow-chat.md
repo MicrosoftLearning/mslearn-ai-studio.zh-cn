@@ -1,11 +1,12 @@
 ---
 lab:
-  title: 在 Azure AI Foundry 门户中使用提示流生成自定义 copilot
+  title: 使用提示流管理聊天应用中的对话
+  description: 了解如何使用提示流管理对话，并确保构建和编排提示以获得最佳结果。
 ---
 
-# 在 Azure AI Foundry 门户中使用提示流生成自定义 copilot
+# 使用提示流管理聊天应用中的对话
 
-在本练习中，将使用 Azure AI Foundry 门户的提示流创建自定义 copilot，使用用户提示和聊天历史记录作为输入，并使用 Azure OpenAI 中的 GPT 模型生成输出。
+在本练习中，将使用 Azure AI Foundry 门户的提示流创建自定义聊天应用，使用用户提示和聊天历史记录作为输入，并使用 Azure OpenAI 中的 GPT 模型生成输出。
 
 该练习大约需要 **30** 分钟。
 
@@ -42,6 +43,9 @@ lab:
     - **每分钟令牌数速率限制（数千个）**：5K
     - **内容筛选器**：DefaultV2
     - **启用动态配额**：已禁用
+
+    > **备注**：如果当前 AI 资源位置没有可用于要部署模型的配额，系统会要求你选择其他位置，以便新建 AI 资源并连接到项目。
+
 1. 等待模型部署。 部署就绪后，选择“在操场中打开”****。
 1. 在聊天窗口中，输入查询 `What can you do?`。
 
@@ -83,7 +87,7 @@ lab:
         <li>在 Azure 门户中，选择 AI 服务资源。</li>
         <li>在“资源管理”下的“标识”选项卡中，确认它是系统分配的托管标识。</li>
         <li>导航到关联的存储帐户。 在 IAM 页上，添加角色分配<em>存储 Blob 数据读取器</em>。</li>
-        <li>在“<strong>分配访问权限</strong>”下，选择“<strong>托管标识</strong>”、“<strong>+ 选择成员</strong>”，然后选择“<strong>所有系统分配的托管标识</strong>”。</li>
+        <li>在“<strong>分配访问权限</strong>”下，选择“<strong>托管标识</strong>”、“<strong>+ 选择成员</strong>”，选择“<strong>所有系统分配的托管标识</strong>”，然后选择 Azure AI 服务资源。</li>
         <li>查看并分配以保存新设置，然后重试上一步。</li>
     </ul>
 </details>
