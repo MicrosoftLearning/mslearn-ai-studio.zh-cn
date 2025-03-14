@@ -1,5 +1,5 @@
 ---
-title: Azure OpenAI 练习
+title: 开发生成式 AI 解决方案
 permalink: index.html
 layout: home
 ---
