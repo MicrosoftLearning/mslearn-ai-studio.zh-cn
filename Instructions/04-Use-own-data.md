@@ -1,60 +1,41 @@
 ---
 lab:
-  title: 创建一个使用自己数据的生成式 AI 应用
-  description: 了解如何使用“检索增强生成 (RAG)”模型生成聊天应用，该应用依据你自己的数据生成提示。
+  title: 基于自有数据构建生成式 AI 应用
+  description: 了解如何使用检索增强生成 (RAG) 模型，构建基于自有数据优化提示的聊天应用。
 ---
 
-# 创建一个使用自己数据的生成式 AI 应用
+# 基于自有数据构建生成式 AI 应用
 
 检索增强生成 (RAG) 是一种用于生成应用程序的技术，这些应用程序将来自自定义数据源的数据集成到生成式 AI 模型的提示中。 RAG 是开发生成式 AI 应用（基于聊天的应用程序，使用语言模型来解释输入并生成适当的响应）的常用模式。
 
-在本练习中，使用 Azure AI Foundry 门户将自定义数据集成到生成式 AI 提示流中。
+在本练习中，你将使用 Azure AI Foundry 门户以及 Azure AI Foundry 和 Azure OpenAI SDK 将自定义数据集成到生成式 AI 应用中。
 
 本练习大约需要 **45** 分钟。
 
-## 创建 Azure AI 搜索资源
+## 创建 Azure AI Foundry 项目
 
-生成式 AI 应用解决方案会将自定义数据集成到提示流中。 为了支持此集成，你需要一个 Azure AI 搜索资源来为数据建立索引。
+首先，创建一个 Azure AI Foundry 项目及其所需的服务资源，以便使用自己的数据（包括 Azure AI 搜索资源）提供支持。
 
-1. 在 Web 浏览器中打开 [Azure 门户](https://portal.azure.com) (`https://portal.azure.com`)，然后使用 Azure 凭据登录。
-1. 在主页上选择“+ 创建资源”，然后搜索 `Azure AI Search`。**** 然后使用以下设置创建新的 Azure AI 搜索资源：
+1. 在 Web 浏览器中打开 [Azure AI Foundry 门户](https://ai.azure.com)，网址为：`https://ai.azure.com`，然后使用 Azure 凭据登录。 关闭首次登录时打开的任何使用技巧或快速入门窗格，如有必要，请使用左上角的 **Azure AI Foundry** 徽标导航到主页，如下图所示：
 
-    - 订阅****：*选择 Azure 订阅*
-    - **资源组**：选择或创建资源组
-    - **服务名称**：输入独一无二的服务名称**
-    - 位置****：从以下任何区域中进行随机选择******\*
-        - 澳大利亚东部
-        - 加拿大东部
-        - 美国东部
-        - 美国东部 2
-        - 法国中部
-        - 日本东部
-        - 美国中北部
-        - 瑞典中部
-        - 瑞士 
-    - **定价层**：标准
+    ![Azure AI Foundry 门户的屏幕截图。](./media/ai-foundry-home.png)
 
-    > \* 稍后，你将在 Azure AI 搜索资源所在的同一区域中创建一个 Azure AI 中心（其中包括 Azure OpenAI 服务）。 Azure OpenAI 资源受区域配额限制在租户级别。 列出的区域包括本练习中使用的模型类型的默认配额。 在与其他用户共享租户的情况下，随机选择一个区域可以降低单个区域达到配额限制的风险。 如果稍后在练习中达到配额限制，你可能需要在不同的区域中创建另一个 Azure AI 中心。
-
-1. 等待 Azure AI 搜索资源部署完成。
-
-## 创建 Azure AI 项目
-
-现在，可以创建 Azure AI Foundry 项目和支持该项目的 Azure AI 资源。
-
-1. 在 Web 浏览器中打开 [Azure AI Foundry 门户](https://ai.azure.com)，网址为：`https://ai.azure.com`，然后使用 Azure 凭据登录。
 1. 在主页中，选择“**+ 创建项目**”。
-1. 在“**创建项目**”向导中，可以看到将使用项目自动创建的所有 Azure 资源。 选择“**自定义**”并连接到 Azure AI 搜索资源：
+1. 在“**创建项目**”向导中，输入合适的项目名称（例如，`my-ai-project`），如果建议使用现有中心，请选择创建新中心的选项。 然后查看将自动创建的 Azure 资源以支持中心和项目。
+1. 选择“**自定义**”并为中心指定以下设置：
+    - **中心名称**：*唯一名称 - 例如`my-ai-hub`*
+    - **订阅**：Azure 订阅
+    - **资源组**：*新建资源组并提供唯一名称（例如 `my-ai-resources`），或选择现有资源组*
+    - **位置**：选择“**帮助我选择**”，然后在“位置帮助程序”窗口中选择“**gpt-4**”和“**text-embedding-ada-002**”，并使用推荐的区域\*
+    - **连接 Azure AI 服务或 Azure OpenAI**：*新建 AI 服务资源并提供适当的名称（例如 `my-ai-services`）或使用现有资源*
+    - **连接 Azure AI 搜索**：*使用唯一名称创建新的 Azure AI 搜索资源*
 
-    - **中心名称**：唯一的名称**
-    - **Azure 订阅**：Azure 订阅**
-    - 资源组****：*选择包含 Azure AI 搜索资源的资源组*
-    - 位置****：*你的 Azure AI 搜索资源所在的同一位置*
-    - **连接 Azure AI 服务或 Azure OpenAI**：（新建）*使用所选中心名称自动填充*
-    - **连接 Azure AI 搜索**：*选择 Azure AI 搜索资源*
+    > \* Azure OpenAI 资源受区域配额限制在租户级别。 如果稍后在练习中达到配额限制，你可能需要在不同的区域中创建另一个资源。
 
-1. 选择“**下一步**”查看配置。
-1. 选择“**创建**”并等待该进程完成。
+1. 选择“**下一步**”查看配置。 然后，选择“**创建**”并等待该进程完成。
+1. 创建项目后，关闭显示的所有使用技巧，并查看 Azure AI Foundry 门户中的“**概览**”页，与下图类似：
+
+    ![Azure AI Foundry 门户中 Azure AI 项目详细信息的屏幕截图。](./media/ai-foundry-project.png)
    
 ## 部署模型
 
@@ -76,7 +57,7 @@ lab:
 
     > **备注**：如果当前 AI 资源位置没有可用于要部署模型的配额，系统会要求你选择其他位置，以便新建 AI 资源并连接到项目。
 
-1. 重复上述步骤，使用部署名称 `gpt-35-turbo-16k` 部署 gpt-35-turbo-16k**** 模型。
+1. 重复上述步骤，使用部署名称`gpt-4`部署 **GPT-4** 模型。
 
     > **注意**：减少每分钟令牌数 (TPM) 有助于避免正在使用的订阅中可用配额的过度使用。 对于本练习中使用的数据，5,000 TPM 已经足够。
 
@@ -108,150 +89,169 @@ Copilot 的数据包括一组 PDF 格式的旅行手册，来自虚构的旅行�
     - 搜索设置****：
         - 矢量设置****：向此搜索资源添加矢量搜索
         - **Azure OpenAI 连接**：*为中心选择默认 Azure OpenAI 资源。*
-        
-1. 等待索引编制过程完成，这可能需要几分钟时间。 索引创建操作包含以下作业：
+
+1. 等待索引过程完成，这可能需要一段时间，具体取决于订阅中的可用计算资源。 索引创建操作包含以下作业：
 
     - 将文本标记破解、分块，然后将其嵌入到“手册”数据中。
     - 创建 Azure AI 搜索索引。
     - 注册索引资产。
 
-## 测试索引
+## 在操场中测试索引
 
 在基于 RAG 的提示流中使用索引之前，我们先验证它是否可用于影响生成式 AI 响应。
 
-1. 在左侧导航窗格中，选择“**操场**”页。
-1. 在“聊天”页的“设置”窗格中，确保已选择 **gpt-35-turbo-16k** 模型部署。 然后，在主聊天会话面板中提交提示“`Where can I stay in New York?`”
+1. 在左侧导航窗格中，选择“**操场**”页，然后打开“**聊天**”操场。
+1. 在“聊天操场”页的“设置”窗格中，确保已选择“**GPT-4**”模型部署。 然后，在主聊天会话面板中提交提示“`Where can I stay in New York?`”
 1. 查看响应，该响应应该是来自模型的通用答案，没有来自索引的任何数据。
 1. 在“设置”窗格中，展开“**添加数据**”字段，然后添加 **brochures-index** 项目索引，并选择“**混合（矢量 + 关键字）**”搜索类型。
 
-   > **备注**：某些用户会立即发现新建的索引不可用。 刷新浏览器通常很有帮助，但如果仍然遇到找不到索引的问题，可能需要等到索引被识别。
+   > **提示**：在某些情况下，新建的索引可能无法立即使用。 刷新浏览器通常很有帮助，但如果仍然遇到找不到索引的问题，可能需要等到索引被识别。
 
 1. 添加索引并重启聊天会话后，重新提交提示“`Where can I stay in New York?`”
 1. 查看响应，该响应应基于索引中的数据。
 
-## 在提示流中使用索引
+## 使用 Azure AI Foundry 和 Azure OpenAI SDK 创建 RAG 客户端应用程序
 
-矢量索引已保存在 Azure AI Foundry 项目中，可以在提示流中轻松使用。
+拥有工作索引后，可以使用 Azure AI Foundry 和 Azure OpenAI SDK 在客户端应用程序中实现 RAG 模式。 我们将在一个简单的示例中探索代码实现。
 
-1. 在 Azure AI Foundry 门户的项目中，在左侧导航窗格的“**生成和自定义**”下，选择“**提示流**”页。
-1. 通过克隆库中的“基于数据的多轮问答”**** 示例来创建新的提示流。 将此示例的克隆保存在名为 `brochure-flow` 的文件夹中。
-    <details>  
-      <summary><b>故障排除提示</b>：权限错误</summary>
-        <p>如果新建提示流时收到权限错误，请尝试执行以下操作进行故障排除：</p>
-        <ul>
-          <li>在 Azure 门户中，选择 AI 服务资源。</li>
-          <li>在“资源管理”下的“标识”选项卡中，确认它是系统分配的托管标识。</li>
-          <li>导航到关联的存储帐户。 在 IAM 页上，添加角色分配<em>存储 Blob 数据读取器</em>。</li>
-          <li>在“<strong>分配访问权限</strong>”下，选择“<strong>托管标识</strong>”、“<strong>+ 选择成员</strong>”，选择“<strong>所有系统分配的托管标识</strong>”，然后选择 Azure AI 服务资源。</li>
-          <li>查看并分配以保存新设置，然后重试上一步。</li>
-        </ul>
-    </details>
+> **提示**：你可以选择使用 Python 或 Microsoft C# 开发 RAG 解决方案。 按照所选语言的相应部分中的说明进行操作。
 
-1. 当提示流设计器页面打开时，查看 brochure-flow****。 其图应如下图所示：
+### 准备应用程序配置
 
-    ![提示流图的屏幕截图](./media/chat-flow.png)
+1. 在 Azure AI Foundry 门户中，查看项目的“**概述**”页。
+1. 在“**项目详细信息**”区域中，记下**项目连接字符串**。 你将使用此连接字符串连接到客户端应用程序中的项目。
+1. 打开新的浏览器选项卡（使 Azure AI Foundry 门户在现有选项卡中保持打开状态）。 然后在新选项卡中，浏览到 [Azure 门户](https://portal.azure.com)，网址为：`https://portal.azure.com`；如果出现提示，请使用 Azure 凭据登录。
+1. 使用页面顶部搜索栏右侧的 **[\>_]** 按钮在 Azure 门户中创建新的 Cloud Shell，选择 ***PowerShell*** 环境。 Cloud Shell 在 Azure 门户底部的窗格中提供命令行接口。
 
-    你正在使用的示例提示流实现了聊天应用程序的提示逻辑，用户可以在其中通过迭代方式将文本输入提交到聊天界面。 对话历史记录将保留，包含在每次迭代的上下文中。 提示流会协调一系列工具**，以实现以下目的：
+    > **备注**：如果以前创建了使用 *Bash* 环境的 Cloud Shell，请将其切换到 ***PowerShell***。
 
-    - 将历史记录追加到聊天输入，以问题的上下文化形式定义提示。
-    - 使用你的索引和你自己根据问题选择的查询类型来检索上下文。
-    - 通过使用从索引检索到的数据来生成提示上下文，从而扩充问题。
-    - 通过添加系统消息和构建聊天历史记录来创建提示变体。
-    - 将提示提交给语言模型以生成自然语言响应。
+1. 在 Cloud Shell 工具栏的“**设置**”菜单中，选择“**转到经典版本**”（这是使用代码编辑器所必需的）。
 
-1. 使用“启动计算会话”按钮启动流的运行时计算。****
+    > **提示**：将命令粘贴到 cloudshell 中时，输出可能会占用大量屏幕缓冲区。 可以通过输入 `cls` 命令来清除屏幕，以便更轻松地专注于每项任务。
 
-    等待运行时启动。 这为提示流提供计算上下文。 在等待期间，请在“流”**** 选项卡中查看流中的工具部分。
+1. 在 PowerShell 窗格中，输入以下命令以克隆包含此练习的 GitHub 存储库：
 
-1. 在****“输入”部分，确保输入包括以下项：
-    - chat_history****
-    - chat_input****
+    ```
+    rm -r mslearn-ai-foundry -f
+    git clone https://github.com/microsoftlearning/mslearn-ai-studio mslearn-ai-foundry
+    ```
 
-    此示例中的默认聊天记录包括一些有关 AI 的对话。
+> **备注**：按照所选编程语言的步骤操作。
 
-1. 在****“输出”部分，确保输出包括以下项：
+1. 克隆存储库后，导航到包含聊天应用程序代码文件的文件夹：  
 
-    - **** chat_output：值为 ${chat_with_context.output}
+    **Python**
 
-1. 在“modify_query_with_history”**** 部分选择以下设置（其他部分保持原样）：
+    ```
+   cd mslearn-ai-foundry/labfiles/rag-app/python
+    ```
 
-    - 连接****：** AI 中心的默认 Azure OpenAI 资源
-    - **** Api：chat
-    - deployment_name****：gpt-35-turbo-16k
-    - response_format****：{"type":"text"}
+    **C#**
 
-1. 等待计算会话启动，然后在“**查找”** 部分设置以下参数值：
+    ```
+   cd mslearn-ai-foundry/labfiles/rag-app/c-sharp
+    ```
 
-    - mlindex_content****：选择空字段以打开“生成”窗格**
-        - index_type****：已注册的索引
-        - mlindex_asset_id****：brochures-index:1
-    - **** queries：${modify_query_with_history.output}
-    - **** query_type：Hybrid（矢量 + 关键字）
-    - top_k****：2
+1. 在 Cloud Shell 命令行窗格中，输入以下命令安装将使用的库：
 
-1. 在 generate_prompt_context**** 部分，检查 Python 脚本并确保此工具的“inputs”**** 包含以下参数：
+    **Python**
 
-    - search_result（对象）：${lookup.output}******
+    ```
+   pip install python-dotenv azure-ai-projects azure-identity openai
+    ```
 
-1. 在 Prompt_variants**** 部分，检查 Python 脚本并确保此工具的“inputs”**** 包含以下参数：
+    **C#**
 
-    - contexts**** (string)**：${generate_prompt_context.output}
-    - chat_history**** (string)**：${inputs.chat_history}
-    - chat_input**** (string)**：${inputs.chat_input}
+    ```
+   dotnet add package Azure.Identity
+   dotnet add package Azure.AI.Projects --prerelease
+   dotnet add package Azure.AI.OpenAI --prerelease
+    ```
+    
 
-1. 在 chat_with_context**** 部分选择以下设置（其他部分保持原样）：
+1. 输入以下命令以编辑已提供的配置文件：
 
-    - 连接****：Default_AzureOpenAI
-    - Api****：聊天
-    - deployment_name****：gpt-35-turbo-16k
-    - response_format****：{"type":"text"}
+    **Python**
 
-    然后确保该工具的 inputs**** 包含以下参数：
-    - prompt_text**** (string)**：${Prompt_variants.output}
+    ```
+   code .env
+    ```
 
-1. 在工具栏上，使用“保存”**** 按钮保存对提示流中的工具所做的更改。
-1. 在工具栏中选择“聊天”。**** 此时会打开一个聊天窗格，其中包含示例对话历史记录以及已根据示例值填写的输入。 可以忽略这些警告。
-1. 在聊天窗格中，将默认输入替换为问题“`Where can I stay in London?`”，然后提交它。
-1. 查看响应，该响应应基于索引中的数据。
-1. 查看流中每个工具的输出。
-1. 在聊天窗格中，输入问题“`What can I do there?`”
-1. 查看响应，该响应应基于索引中的数据并考虑聊天历史记录（因此，“那里”被理解为“在伦敦”）。
-1. 查看流中每个工具的输出，注意流中的每个工具如何对其输入进行操作以准备上下文化提示并获得相应的响应。
+    **C#**
 
-## 部署流
+    ```
+   code appsettings.json
+    ```
 
-有了一个使用索引数据的工作流后，就可以将其部署为服务以供某个 Copilot 应用程序使用了。
+    该文件已在代码编辑器中打开。
 
-> **备注**：根据区域和数据中心负载，部署有时可能需要一段时间，有时会在与部署交互时引发错误。 在部署过程中，可随时转到下面的挑战部分，如果时间紧迫，可跳过部署测试。
+1. 在代码文件中，替换以下占位符： 
+    - **your_project_endpoint**：替换为项目的连接字符串（从 Azure AI Foundry 门户中的项目**概述**页面复制）
+    - **your_model_deployment** 替换为分配给模型部署的名称（应为`gpt-4`）
+    - **your_index**：替换为你的索引名称（应为`brochures-index`）
+1. 替换占位符后，使用 **Ctrl+S** 命令保存更改，然后使用 **Ctrl+Q** 命令关闭代码编辑器，同时使 Cloud Shell 命令行保持打开状态。
 
-1. 在工具栏中选择“部署”。****
-1. 使用以下设置创建一个部署：
-    - 基本设置：
-        - **终结点**：新建
-        - **终结点名称**：*使用默认唯一终结点名称*
-        - **部署名称**：*使用默认部署终结点名称*
-        - **虚拟机**：Standard_DS3_v2
-        - **实例计数**：3
-        - 推理数据收集****：选定
-    - 高级设置****：
-        - 使用默认设置**
-1. 在 Azure AI Foundry 门户的项目中，在左侧导航窗格中“**我的资产**”下，选择“**模型 + 终结点**”页。
-1. 不断刷新视图，直到 brochure-endpoint-1**** 部署在 brochure-endpoint**** 终结点下显示为已成功**（这可能需要较长时间）。
-1. 部署成功后，请选择它。 然后，在其****“测试”页上输入提示“`What is there to do in San Francisco?`”并查看响应。
-1. 输入提示“`Where else could I go?`”并查看响应。
-1. 查看终结点的“使用”**** 页。请注意，它包含连接信息和示例代码，你可以使用它们为终结点生成客户端应用程序，这样就能够将提示流解决方案集成到一个用作自定义 Copilot 的应用程序中。
+### 探索实现 RAG 模式的代码
 
-## 难题 
+1. 输入以下命令以编辑已提供的代码文件：
+
+    **Python**
+
+    ```
+   code rag-app.py
+    ```
+
+    **C#**
+
+    ```
+   code Program.cs
+    ```
+
+1. 查看文件中的代码，并注意以下几点：
+    - 使用 Azure AI Foundry SDK 连接到项目（使用项目连接字符串）
+    - 从项目检索默认的 Azure AI 搜索连接，帮助确定 Azure AI 搜索服务的终结点和密钥。
+    - 根据项目中的默认 Azure OpenAI 服务连接创建经过身份验证的 Azure OpenAI 客户端。
+    - 将提示（包括系统消息和用户消息）提交给 Azure OpenAI 客户端，并添加有关 Azure AI 搜索索引的附加信息，为提示提供支持。
+    - 显示依据提示生成的响应。
+1. 使用 **Ctrl+Q** 命令关闭代码编辑器，同时保持 cloud shell 命令行打开。
+
+### 运行聊天应用程序
+
+1. 在 Cloud Shell 命令行窗格中，输入以下命令以运行应用：
+
+    **Python**
+
+    ```
+   python rag-app.py
+    ```
+
+    **C#**
+
+    ```
+   dotnet run
+    ```
+
+1. 出现提示时，输入问题，例如`Where can I travel to?`并查看生成式 AI 模型的回复。
+
+    请注意，响应包含源引用，用于指示找到答案的索引数据。
+
+1. 尝试其他问题，例如`Where should I stay in London?`
+
+    > **注意**：此简单示例应用程序未包含保留会话历史的逻辑，因此每个提示都被视为一次新对话。
+
+1. 完成后，输入`quit`退出程序。 然后关闭 Cloud Shell 窗格。
+
+## 难题
 
 既然你已经体验了如何在使用 Azure AI Foundry 门户构建的生成式 AI 应用中集成自己的数据，就让我们进一步探索吧！
 
-尝试通过 Azure AI Foundry 门户添加新数据源，为其编制索引，并在提示流中集成索引数据。 可以尝试的一些数据集包括：
+尝试通过 Azure AI Foundry 门户添加新数据源，为其编制索引，并将索引数据集成到客户端应用中。 可以尝试的一些数据集包括：
 
 - 计算机上有的一系列（研究）文章。
 - 一组来自过去会议的演示文稿。
 - [Azure 搜索示例数据](https://github.com/Azure-Samples/azure-search-sample-data)存储库中提供的任何数据集。
 
-尽可能利用各种资源创建数据源，并将其整合到提示流中。 试用新的提示流并提交只能由所选数据集回答的提示！
+提交只能依据所选数据集回答的提示，测试解决方案！
 
 ## 清理
 
