@@ -1,9 +1,3 @@
----
-lab:
-  title: 使用代码优先开发工具生成生成式 AI 应用
-  description: 了解如何使用代码创建和更新生成式 AI 应用的元素，以支持 DevOps 场景中的自动化生成和部署。
----
-
 # 使用代码优先开发工具生成生成式 AI 应用
 
 在本练习中，你将克隆并部署 Azure Developer CLI 模板，该模板可预配 AI 项目并将其[部署到 Azure AI Foundry 上的联机终结点](https://learn.microsoft.com/azure/developer/azure-developer-cli/azure-ai-ml-endpoints?WT.mc_id=academic-140829-cacaste)。 然后，以它为起点，使用 Azure AI 和代码优先体验生成自己的自定义 Copilot。

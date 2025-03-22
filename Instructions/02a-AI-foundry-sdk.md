@@ -24,11 +24,18 @@ lab:
     - **中心名称**：*唯一名称 - 例如`my-ai-hub`*
     - **订阅**：Azure 订阅
     - **资源组**：*新建资源组并提供唯一名称（例如 `my-ai-resources`），或选择现有资源组*
-    - **位置**：选择“**帮助我选择**”，然后在“位置帮助程序”窗口中选择“**gpt-4**”，并使用推荐的区域\*
+    - **位置**：选择以下任一区域\*：
+        - 美国东部
+        - 美国东部 2
+        - 美国中北部
+        - 美国中南部
+        - 瑞典中部
+        - 美国西部
+        - 美国西部 3
     - **连接 Azure AI 服务或 Azure OpenAI**：*新建 AI 服务资源并提供适当的名称（例如 `my-ai-services`）或使用现有资源*
     - **连接 Azure AI 搜索**：跳过连接
 
-    > \* Azure OpenAI 资源受区域配额限制在租户级别。 如果稍后在练习中达到配额限制，你可能需要在不同的区域中创建另一个资源。
+    > \*撰写本文时，我们将在本练习中使用的 Microsoft *Phi-4* 模型在这些区域中可用。 可以在 [Azure AI Foundry 文档](https://learn.microsoft.com/azure/ai-foundry/how-to/deploy-models-serverless-availability#region-availability)中查看特定模型的最新区域可用性。 如果在稍后的练习中达到区域配额限制，则可能需要在其他区域中创建另一个资源。
 
 1. 选择“**下一步**”查看配置。 然后，选择“**创建**”并等待该进程完成。
 1. 创建项目后，关闭显示的所有使用技巧，并查看 Azure AI Foundry 门户中的项目页面，如下图所示：
@@ -102,9 +109,9 @@ lab:
     **C#**
 
     ```
-   dotnet add package Azure.AI.Inference --version 1.0.0-beta.3
-   dotnet add package Azure.AI.Projects --version 1.0.0-beta.3
    dotnet add package Azure.Identity
+   dotnet add package Azure.AI.Projects --version 1.0.0-beta.3
+   dotnet add package Azure.AI.Inference --version 1.0.0-beta.3
     ```
     
 
@@ -153,6 +160,7 @@ lab:
    from dotenv import load_dotenv
    from azure.identity import DefaultAzureCredential
    from azure.ai.projects import AIProjectClient
+   from azure.ai.inference.models import SystemMessage, UserMessage
     ```
 
     **C#**
@@ -201,14 +209,13 @@ lab:
 
     ```python
    response = chat.complete(
-        model=model_deployment,
-        messages=[
-            {"role": "system", "content": "You are a helpful AI assistant that answers questions."},
-            {"role": "user", "content": input_text},
-            ],
-        )
-   print(response.choices[0].message.content)
-    ```
+       model=model_deployment,
+       messages=[
+           SystemMessage("You are a helpful AI assistant that answers questions."),
+           UserMessage(input_text)
+       ])
+   print(response.choices[0].message.content
+```
 
     **C#**
 
