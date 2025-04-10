@@ -23,7 +23,7 @@ lab:
     ![Azure AI Foundry 门户的屏幕截图。](./media/ai-foundry-home.png)
 
 1. 在主页中，选择“**+ 创建项目**”。
-1. 在“**创建项目**”向导中，输入合适的项目名称（例如，`my-ai-project`），如果建议使用现有中心，请选择创建新中心的选项。 然后查看将自动创建的 Azure 资源以支持中心和项目。
+1. 在“**创建项目**”向导中，输入合适的项目名称（例如，`my-ai-project`），如果建议使用现有中心，请选择新建中心的选项。 然后查看将自动创建的 Azure 资源以支持中心和项目。
 1. 选择“**自定义**”并为中心指定以下设置：
     - **中心名称**：*唯一名称 - 例如`my-ai-hub`*
     - **订阅**：Azure 订阅
@@ -59,7 +59,7 @@ lab:
 
     > **备注**：如果当前 AI 资源位置没有可用于要部署模型的配额，系统会要求你选择其他位置，以便新建 AI 资源并连接到项目。
 
-1. 重复上述步骤，使用部署名称`gpt-4`部署 **GPT-4** 模型。
+1. 重复前面的步骤，使用默认版本的**标准**部署（TPM 速率限制为 5K）部署部署名称为`gpt-4`的 **GPT-4** 模型。
 
     > **注意**：减少每分钟令牌数 (TPM) 有助于避免正在使用的订阅中可用配额的过度使用。 对于本练习中使用的数据，5,000 TPM 已经足够。
 
@@ -67,7 +67,7 @@ lab:
 
 Copilot 的数据包括一组 PDF 格式的旅行手册，来自虚构的旅行社 Margie's Travel**。 让我们将它们添加到项目。
 
-1. 从 `https://github.com/MicrosoftLearning/mslearn-ai-studio/raw/main/data/brochures.zip` 下载[手册的压缩存档](https://github.com/MicrosoftLearning/mslearn-ai-studio/raw/main/data/brochures.zip)，将其解压缩到本地文件系统上名为 brochures**** 的文件夹中。
+1. 在新的浏览器标签页中，从`https://github.com/MicrosoftLearning/mslearn-ai-studio/raw/main/data/brochures.zip`下载[手册的压缩存档](https://github.com/MicrosoftLearning/mslearn-ai-studio/raw/main/data/brochures.zip)，将其解压缩到本地文件系统上名为 **brochures** 的文件夹中。
 1. 在 Azure AI Foundry 门户的项目中，在左侧导航窗格“**我的资产**”下，选择“**数据 + 索引**”页。
 1. 选择“+ 新建数据”。****
 1. 在“添加数据”向导中，展开下拉菜单以选择“上传文件/文件夹”。********
@@ -91,12 +91,18 @@ Copilot 的数据包括一组 PDF 格式的旅行手册，来自虚构的旅行�
     - 搜索设置****：
         - 矢量设置****：向此搜索资源添加矢量搜索
         - **Azure OpenAI 连接**：*为中心选择默认 Azure OpenAI 资源。*
+        - **嵌入模型**：text-embedding-ada-002
+        - **嵌入模型部署**：*部署* text-embedding-ada-002 *模型*
 
-1. 等待索引过程完成，这可能需要一段时间，具体取决于订阅中的可用计算资源。 索引创建操作包含以下作业：
+1. 创建向量索引并等待索引过程完成，这可能需要一段时间，具体取决于订阅中的可用计算资源。
+
+    索引创建操作包含以下作业：
 
     - 将文本标记破解、分块，然后将其嵌入到“手册”数据中。
     - 创建 Azure AI 搜索索引。
     - 注册索引资产。
+
+    > **提示**：等待创建索引时，不妨查看下载的手册以熟悉其内容。
 
 ## 在操场中测试索引
 
@@ -123,24 +129,31 @@ Copilot 的数据包括一组 PDF 格式的旅行手册，来自虚构的旅行�
 1. 在 Azure AI Foundry 门户中，查看项目的“**概述**”页。
 1. 在“**项目详细信息**”区域中，记下**项目连接字符串**。 你将使用此连接字符串连接到客户端应用程序中的项目。
 1. 打开新的浏览器选项卡（使 Azure AI Foundry 门户在现有选项卡中保持打开状态）。 然后在新选项卡中，浏览到 [Azure 门户](https://portal.azure.com)，网址为：`https://portal.azure.com`；如果出现提示，请使用 Azure 凭据登录。
-1. 使用页面顶部搜索栏右侧的 **[\>_]** 按钮在 Azure 门户中创建新的 Cloud Shell，选择 ***PowerShell*** 环境。 Cloud Shell 在 Azure 门户底部的窗格中提供命令行接口。
+
+    关闭任何欢迎通知以查看 Azure 门户主页。
+
+1. 使用页面顶部搜索栏右侧的 **[\>_]** 按钮在 Azure 门户中新建 Cloud Shell，选择订阅中不含存储的 ***PowerShell*** 环境。
+
+    Cloud Shell 在 Azure 门户底部的窗格中提供命令行接口。 可以调整此窗格的大小或最大化此窗格，以便更易于使用。
 
     > **备注**：如果以前创建了使用 *Bash* 环境的 Cloud Shell，请将其切换到 ***PowerShell***。
 
 1. 在 Cloud Shell 工具栏的“**设置**”菜单中，选择“**转到经典版本**”（这是使用代码编辑器所必需的）。
 
-    > **提示**：将命令粘贴到 cloudshell 中时，输出可能会占用大量屏幕缓冲区。 可以通过输入 `cls` 命令来清除屏幕，以便更轻松地专注于每项任务。
+    **<font color="red">在继续作之前，请确保已切换到 Cloud Shell 的经典版本。</font>**
 
-1. 在 PowerShell 窗格中，输入以下命令以克隆包含此练习的 GitHub 存储库：
+1. 在 PowerShell 窗格中，输入以下命令克隆包含此练习代码文件的 GitHub 存储库：
 
     ```
     rm -r mslearn-ai-foundry -f
     git clone https://github.com/microsoftlearning/mslearn-ai-studio mslearn-ai-foundry
     ```
 
-> **备注**：按照所选编程语言的步骤操作。
+    > **提示**：将命令粘贴到 Cloudshell 中时，输出可能会占用大量屏幕缓冲区。 可以通过输入 `cls` 命令来清除屏幕，以便更轻松地专注于每项任务。
 
-1. 克隆存储库后，导航到包含聊天应用程序代码文件的文件夹：  
+1. 克隆存储库后，导航到包含聊天应用程序代码文件的文件夹：
+
+    > **备注**：按照所选编程语言的步骤操作。
 
     **Python**
 
@@ -188,7 +201,7 @@ Copilot 的数据包括一组 PDF 格式的旅行手册，来自虚构的旅行�
     该文件已在代码编辑器中打开。
 
 1. 在代码文件中，替换以下占位符： 
-    - **your_project_endpoint**：替换为项目的连接字符串（从 Azure AI Foundry 门户中的项目**概述**页面复制）
+    - **your_project_connection_string**：替换为项目的连接字符串（从 Azure AI Foundry 门户中的项目“**概述**”页复制）
     - **your_model_deployment** 替换为分配给模型部署的名称（应为`gpt-4`）
     - **your_index**：替换为你的索引名称（应为`brochures-index`）
 1. 替换占位符后，在代码编辑器中使用 **CTRL+S** 命令或 ** 右键单击 > 保存** 保存更改，然后使用 **CTRL+Q** 命令或 ** 右键单击 > 退出** 关闭代码编辑器，同时保持 Cloud Shell 命令行打开。
@@ -211,10 +224,12 @@ Copilot 的数据包括一组 PDF 格式的旅行手册，来自虚构的旅行�
 
 1. 查看文件中的代码，并注意以下几点：
     - 使用 Azure AI Foundry SDK 连接到项目（使用项目连接字符串）
+    - 通过项目连接创建经过身份验证的 Azure OpenAI 客户端。
     - 从项目检索默认的 Azure AI 搜索连接，帮助确定 Azure AI 搜索服务的终结点和密钥。
-    - 根据项目中的默认 Azure OpenAI 服务连接创建经过身份验证的 Azure OpenAI 客户端。
-    - 将提示（包括系统消息和用户消息）提交给 Azure OpenAI 客户端，并添加有关 Azure AI 搜索索引的附加信息，为提示提供支持。
+    - 创建合适的系统消息。
+    - 将提示（包括系统消息和基于用户输入的用户消息）提交给 Azure OpenAI 客户端，并添加有关 Azure AI 搜索索引的附加信息，为提示提供支持。
     - 显示依据提示生成的响应。
+    - 将响应添加到聊天历史记录。
 1. 使用 **Ctrl+Q** 命令关闭代码编辑器，同时保持 cloud shell 命令行打开。
 
 ### 运行聊天应用程序
@@ -233,27 +248,13 @@ Copilot 的数据包括一组 PDF 格式的旅行手册，来自虚构的旅行�
    dotnet run
     ```
 
-1. 出现提示时，输入问题，例如`Where can I travel to?`并查看生成式 AI 模型的回复。
+1. 出现提示时，输入问题，例如`Where should I stay in London?`并查看生成式 AI 模型的回复。
 
     请注意，响应包含源引用，用于指示找到答案的索引数据。
 
-1. 尝试其他问题，例如`Where should I stay in London?`
-
-    > **注意**：此简单示例应用程序未包含保留会话历史的逻辑，因此每个提示都被视为一次新对话。
+1. 尝试提出跟进问题，例如`What can I do there?`
 
 1. 完成后，输入`quit`退出程序。 然后关闭 Cloud Shell 窗格。
-
-## 难题
-
-既然你已经体验了如何在使用 Azure AI Foundry 门户构建的生成式 AI 应用中集成自己的数据，就让我们进一步探索吧！
-
-尝试通过 Azure AI Foundry 门户添加新数据源，为其编制索引，并将索引数据集成到客户端应用中。 可以尝试的一些数据集包括：
-
-- 计算机上有的一系列（研究）文章。
-- 一组来自过去会议的演示文稿。
-- [Azure 搜索示例数据](https://github.com/Azure-Samples/azure-search-sample-data)存储库中提供的任何数据集。
-
-提交只能依据所选数据集回答的提示，测试解决方案！
 
 ## 清理
 
