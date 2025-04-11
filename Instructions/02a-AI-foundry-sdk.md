@@ -21,7 +21,7 @@ lab:
     ![Azure AI Foundry 门户的屏幕截图。](./media/ai-foundry-home.png)
 
 1. 在主页中，选择“**+ 创建项目**”。
-1. 在“**创建项目**”向导中，输入合适的项目名称（例如 `my-ai-project`），然后查看为支持项目而自动创建的 Azure 资源。
+1. 在“**创建项目**”向导中，输入合适的项目名称（例如，`my-ai-project`），如果建议使用现有中心，请选择新建中心的选项。 然后查看将自动创建的 Azure 资源以支持中心和项目。
 1. 选择“**自定义**”并为中心指定以下设置：
     - **中心名称**：*唯一名称 - 例如`my-ai-hub`*
     - **订阅**：Azure 订阅
@@ -30,7 +30,7 @@ lab:
     - **连接 Azure AI 服务或 Azure OpenAI**：*新建 AI 服务资源并提供适当的名称（例如 `my-ai-services`）或使用现有资源*
     - **连接 Azure AI 搜索**：跳过连接
 
-    > \* 如果在稍后的练习中达到区域配额限制，则可能需要在其他区域中创建另一个资源。
+    > \*模型配额在租户级别受区域配额的限制。 如果稍后在练习中达到配额限制，你可能需要在不同的区域中创建另一个资源。
 
 1. 选择“**下一步**”查看配置。 然后，选择“**创建**”并等待该进程完成。
 1. 创建项目后，关闭显示的所有使用技巧，并查看 Azure AI Foundry 门户中的项目页面，如下图所示：
@@ -46,17 +46,17 @@ lab:
 1. 在“**模型 + 终结点**”页的“**模型部署**”选项卡中，在“**+ 部署模型**”菜单中，选择“**部署基础模型**”。
 1. 在列表中搜索 **gpt-4** 模型，然后选择并确认。
 1. 在部署详细信息中选择“**自定义**”，并使用以下设置部署模型：
-    - **部署名称**：*模型部署的唯一名称，例如 `gpt-4`*
-    - **部署类型**：全局标准
-    - **模型版本**：*选择默认版本*
-    - **连接的 AI 资源**：*Azure OpenAI 资源连接*
-    - **每分钟令牌速率限制（数千个）**：5K（*或最大可用，如果较低*）
+    - **部署名称**：*模型部署的唯一名称，例如`gpt-4`（请记住选择的名称，以便稍后使用）*
+    - **部署类型**：标准
+    - **模型版本**：0613
+    - **连接的 AI 资源**：*选择 Azure OpenAI 资源连接*
+    - **每分钟令牌数速率限制（数千个）**：5K
     - **内容筛选器**：DefaultV2
     - **启用动态配额**：已禁用
 
     > **注意**：减少 TPM 有助于避免过度使用正在使用的订阅中可用的配额。 5,000 TPM 对本练习中使用的数据是足够的。
 
-1. 等待部署预配状态为“**完成**”。
+1. 等待部署完成。
 
 ## 创建客户端应用程序以与模型聊天
 
@@ -69,7 +69,12 @@ lab:
 1. 在 Azure AI Foundry 门户中，查看项目的“**概述**”页。
 1. 在“**项目详细信息**”区域中，记下**项目连接字符串**。 你将使用此连接字符串连接到客户端应用程序中的项目。
 1. 打开新的浏览器选项卡（使 Azure AI Foundry 门户在现有选项卡中保持打开状态）。 然后在新选项卡中，浏览到 [Azure 门户](https://portal.azure.com)，网址为：`https://portal.azure.com`；如果出现提示，请使用 Azure 凭据登录。
-1. 使用页面顶部搜索栏右侧的 **[\>_]** 按钮在 Azure 门户中创建新的 Cloud Shell，选择 ***PowerShell*** 环境。 Cloud Shell 在 Azure 门户底部的窗格中提供命令行接口。
+
+    关闭任何欢迎通知以查看 Azure 门户主页。
+
+1. 使用页面顶部搜索栏右侧的 **[\>_]** 按钮在 Azure 门户中新建 Cloud Shell，选择订阅中不含存储的 ***PowerShell*** 环境。
+
+    Cloud Shell 在 Azure 门户底部的窗格中提供命令行接口。 可以调整此窗格的大小或最大化此窗格，以便更易于使用。
 
     > **备注**：如果以前创建了使用 *Bash* 环境的 Cloud Shell，请将其切换到 ***PowerShell***。
 
@@ -77,14 +82,14 @@ lab:
 
     **<font color="red">在继续作之前，请确保已切换到 Cloud Shell 的经典版本。</font>**
 
-1. 在 PowerShell 窗格中，输入以下命令以克隆包含此练习的 GitHub 存储库：
+1. 在 PowerShell 窗格中，输入以下命令克隆包含此练习代码文件的 GitHub 存储库：
 
     ```
     rm -r mslearn-ai-foundry -f
     git clone https://github.com/microsoftlearning/mslearn-ai-studio mslearn-ai-foundry
     ```
 
-    > **提示**：将命令粘贴到 cloudshell 中时，输出可能会占用大量屏幕缓冲区。 可以通过输入 `cls` 命令来清除屏幕，以便更轻松地专注于每项任务。
+    > **提示**：将命令粘贴到 Cloudshell 中时，输出可能会占用大量屏幕缓冲区。 可以通过输入 `cls` 命令来清除屏幕，以便更轻松地专注于每项任务。
 
 1. 克隆存储库后，导航到包含聊天应用程序代码文件的文件夹：
 
@@ -135,7 +140,7 @@ lab:
 
     该文件已在代码编辑器中打开。
 
-1. 在代码文件中，将 **your_project_endpoint** 占位符替换为项目的连接字符串（从 Azure AI Foundry 门户中的项目“**概述**”页复制），并将 **your_model_deployment** 占位符替换为分配给 Phi-4 模型部署的名称。
+1. 在代码文件中，将 **your_project_connection_string** 占位符替换为项目的连接字符串（从 Azure AI Foundry 门户中的项目“**概述**”页复制），并将 **your_model_deployment** 占位符替换为分配给 GPT-4 模型部署的名称。
 1. 替换占位符后，在代码编辑器中使用 **CTRL+S** 命令或 ** 右键单击 > 保存** 保存更改，然后使用 **CTRL+Q** 命令或 ** 右键单击 > 退出** 关闭代码编辑器，同时保持 Cloud Shell 命令行打开。
 
 ### 写入代码以连接到项目并与模型聊天
@@ -161,6 +166,7 @@ lab:
     **Python**
 
     ```python
+   # Add references
    from dotenv import load_dotenv
    from azure.identity import DefaultAzureCredential
    from azure.ai.projects import AIProjectClient
@@ -170,6 +176,7 @@ lab:
     **C#**
 
     ```csharp
+   // Add references
    using Azure.Identity;
    using Azure.AI.Projects;
    using Azure.AI.Inference;
@@ -183,6 +190,7 @@ lab:
     **Python**
 
     ```python
+   # Initialize the project client
    projectClient = AIProjectClient.from_connection_string(
         conn_str=project_connection,
         credential=DefaultAzureCredential())
@@ -191,6 +199,7 @@ lab:
     **C#**
 
     ```csharp
+   // Initialize the project client
    var projectClient = new AIProjectClient(project_connection,
                         new DefaultAzureCredential());
     ```
@@ -200,12 +209,14 @@ lab:
     **Python**
 
     ```python
+   # Get a chat client
    chat = projectClient.inference.get_chat_completions_client()
     ```
 
     **C#**
 
     ```csharp
+   // Get a chat client
    ChatCompletionsClient chat = projectClient.GetChatCompletionsClient();
     ```
 
@@ -216,6 +227,7 @@ lab:
     **Python**
 
     ```python
+   # Initialize prompt with system message
    prompt=[
             SystemMessage("You are a helpful AI assistant that answers questions.")
         ]
@@ -224,7 +236,8 @@ lab:
     **C#**
 
     ```csharp
-    var prompt = new List<ChatRequestMessage>(){
+   // Initialize prompt with system message
+   var prompt = new List<ChatRequestMessage>(){
                     new ChatRequestSystemMessage("You are a helpful AI assistant that answers questions.")
                 };
     ```
@@ -234,10 +247,11 @@ lab:
     **Python**
 
     ```python
+   # Get a chat completion
    prompt.append(UserMessage(input_text))
    response = chat.complete(
-       model=model_deployment,
-       messages=prompt)
+        model=model_deployment,
+        messages=prompt)
    completion = response.choices[0].message.content
    print(completion)
    prompt.append(AssistantMessage(completion))
@@ -246,6 +260,7 @@ lab:
     **C#**
 
     ```csharp
+   // Get a chat completion
    prompt.Add(new ChatRequestUserMessage(input_text));
    var requestOptions = new ChatCompletionsOptions()
    {
@@ -298,7 +313,7 @@ lab:
     **C#**
 
     ```
-   dotnet add package Azure.AI.Projects --version 1.0.0-beta.5
+   dotnet add package Azure.AI.Projects --version 1.0.0-beta.6
    dotnet add package Azure.AI.OpenAI --prerelease
     ```
 
@@ -338,12 +353,14 @@ lab:
     **Python**
 
     ```python
+   # Get a chat client 
    openai_client = projectClient.inference.get_azure_openai_client(api_version="2024-10-21")
     ```
 
     **C#**
 
     ```csharp
+   // Get a chat client
    ChatClient openaiClient = projectClient.GetAzureOpenAIChatClient(model_deployment);
     ```
 
@@ -354,17 +371,19 @@ lab:
     **Python**
 
     ```python
+   # Initialize prompt with system message
    prompt=[
-       {"role": "system", "content": "You are a helpful AI assistant that answers questions."}
-   ]
+        {"role": "system", "content": "You are a helpful AI assistant that answers questions."}
+    ]
     ```
 
     **C#**
 
     ```csharp
+   // Initialize prompt with system message
     var prompt = new List<ChatMessage>(){
-       new SystemChatMessage("You are a helpful AI assistant that answers questions.")
-   };
+        new SystemChatMessage("You are a helpful AI assistant that answers questions.")
+    };
     ```
 
 1. 查找注释“**获取聊天完成**”并修改代码，将用户输入添加到提示，从模型检索完成，并将完成内容添加到提示，如下所示：
@@ -372,10 +391,11 @@ lab:
     **Python**
 
     ```python
+   # Get a chat completion
    prompt.append({"role": "user", "content": input_text})
    response = openai_client.chat.completions.create(
-       model=model_deployment,
-       messages=prompt)
+        model=model_deployment,
+        messages=prompt)
    completion = response.choices[0].message.content
    print(completion)
    prompt.append({"role": "assistant", "content": completion})
@@ -384,6 +404,7 @@ lab:
     **C#**
 
     ```csharp
+   // Get a chat completion
    prompt.Add(new UserChatMessage(input_text));
    ChatCompletion completion = openaiClient.CompleteChat(prompt);
    var completionText = completion.Content[0].Text;

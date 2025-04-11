@@ -21,7 +21,7 @@ lab:
     ![Azure AI Foundry 门户的屏幕截图。](./media/ai-foundry-home.png)
 
 2. 在主页中，选择“**+ 创建项目**”。
-3. 在“**创建项目**”向导中，输入合适的项目名称（例如 `my-ai-project`），然后查看为支持项目而自动创建的 Azure 资源。
+3. 在“**创建项目**”向导中，输入合适的项目名称（例如，`my-ai-project`），如果建议使用现有中心，请选择新建中心的选项。 然后查看将自动创建的 Azure 资源以支持中心和项目。
 4. 选择“**自定义**”并为中心指定以下设置：
     - **中心名称**：*唯一名称 - 例如`my-ai-hub`*
     - **订阅**：Azure 订阅
@@ -75,14 +75,14 @@ lab:
 
 5. 在 Cloud Shell 工具栏的“**设置**”菜单中，选择“**转到经典版本**”（这是使用代码编辑器所必需的）。
 
-6. 在 PowerShell 窗格中，输入以下命令以克隆包含此练习的 GitHub 存储库：
+6. 在 PowerShell 窗格中，输入以下命令克隆包含此练习代码文件的 GitHub 存储库：
 
     ```
     rm -r mslearn-ai-foundry -f
     git clone https://github.com/microsoftlearning/mslearn-ai-studio mslearn-ai-foundry
     ```
 
-    > **提示**：将命令粘贴到 cloudshell 中时，输出可能会占用大量屏幕缓冲区。 可以通过输入 `cls` 命令来清除屏幕，以便更轻松地专注于每项任务。
+    > **提示**：将命令粘贴到 Cloudshell 中时，输出可能会占用大量屏幕缓冲区。 可以通过输入 `cls` 命令来清除屏幕，以便更轻松地专注于每项任务。
 
 7. 克隆存储库后，导航到包含应用程序代码文件的文件夹：  
 
@@ -130,7 +130,7 @@ lab:
 
     该文件已在代码编辑器中打开。
 
-10. 在代码文件中，将 **your_project_endpoint** 占位符替换为项目的连接字符串（从 Azure AI Foundry 门户中的项目“**概述**”页复制），并将 **your_model_deployment** 占位符替换为分配给 Phi-4-multimodal-instruct 模型部署的名称。
+10. 在代码文件中，将 **your_project_connection_string** 占位符替换为项目的连接字符串（从 Azure AI Foundry 门户中的项目“**概述**”页复制），并将 **your_model_deployment** 占位符替换为分配给 Phi-4-multimodal-instruct 模型部署的名称。
 11. 替换占位符后，在代码编辑器中使用 **CTRL+S** 命令或 ** 右键单击 > 保存** 保存更改，然后使用 **CTRL+Q** 命令或 ** 右键单击 > 退出** 关闭代码编辑器，同时保持 Cloud Shell 命令行打开。
 
 ### 写入代码以连接到项目并获取模型的聊天客户端
