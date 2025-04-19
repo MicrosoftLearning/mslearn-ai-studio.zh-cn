@@ -10,109 +10,105 @@ lab:
 
 该练习大约需要 **30** 分钟。
 
-## 在 Azure AI Foundry 门户中创建 AI 中心和项目
+## 创建 Azure AI Foundry 项目
 
-首先，在 Azure AI 中心内创建 Azure AI Foundry 门户项目：
+让我们首先创建 Azure AI Foundry 项目。
 
-1. 在 Web 浏览器中，使用 Azure 凭据打开 [https://ai.azure.com](https://ai.azure.com) 并登录。
+1. 在 Web 浏览器中打开 [Azure AI Foundry 门户](https://ai.azure.com)，网址为：`https://ai.azure.com`，然后使用 Azure 凭据登录。 关闭首次登录时打开的任何使用技巧或快速入门窗格，如有必要，请使用左上角的 **Azure AI Foundry** 徽标导航到主页，如下图所示：
+
+    ![Azure AI Foundry 门户的屏幕截图。](./media/ai-foundry-home.png)
+
 1. 在主页中，选择“**+ 创建项目**”。
-1. 在“**创建项目**”向导中，可以看到将使用项目自动创建的所有 Azure 资源，也可以在选择“**创建**”之前先选择“**自定义**”以自定义以下设置：
-
-    - **中心名称**：唯一的名称**
+1. 在**创建项目**向导中，输入项目的有效名，如果出现建议使用现有中心的提示，请选择新建中心的选项。 然后查看将自动创建的 Azure 资源以支持中心和项目。
+1. 选择“**自定义**”并为中心指定以下设置：
+    - **中心名**：*有效的中心名*
     - **订阅**：Azure 订阅
-    - 资源组****：新资源组**
-    - **位置**：选择“**帮助我选择**”，然后在“位置帮助程序”窗口中选择 **gpt-35-turbo**，并使用推荐的区域\*
-    - **连接 Azure AI 服务或 Azure OpenAI**：（新建）*使用所选中心名称自动填充*
+    - **资源组**：*创建或选择资源组*
+    - **位置**：选择**帮助我选择**，然后在“位置帮助程序”窗口中选择**gpt-4o**，并使用推荐的区域\*
+    - **连接 Azure AI 服务或 Azure OpenAI**：*新建 AI 服务资源*
     - **连接 Azure AI 搜索**：跳过连接
 
-    > \* Azure OpenAI 资源受区域配额限制在租户级别。 位置帮助程序中列出的区域包括本练习中使用的模型类型的默认配额。 随机选择区域可降低单个区域达到其配额限制的风险。 如果稍后在练习中达到配额限制，你可能需要在不同的区域中创建另一个资源。 详细了解 [每个区域的模型可用性](https://learn.microsoft.com/azure/ai-services/openai/concepts/models#gpt-35-turbo-model-availability)
+    > \* Azure OpenAI 资源受区域模型配额约束。 如果稍后在练习中达到配额限制，你可能需要在不同的区域中创建另一个资源。
 
-1. 如果已选择“**自定义**”，请选择“**下一步**”并查看配置。
-1. 选择“**创建**”并等待该进程完成。
+1. 选择“**下一步**”查看配置。 然后，选择“**创建**”并等待该进程完成。
+1. 创建项目后，关闭显示的所有使用技巧，并查看 Azure AI Foundry 门户中的项目页面，如下图所示：
 
-## 部署 GPT 模型
+    ![Azure AI Foundry 门户中 Azure AI 项目详细信息的屏幕截图。](./media/ai-foundry-project.png)
 
-要在提示流中使用语言模型，首先需要部署模型。 Azure AI Foundry 门户允许部署可在流中使用的 OpenAI 模型。
+## 配置资源授权
 
-1. 在左侧导航窗格中的“**我的资产**”下，选择“**模型 + 终结点**”页。
-1. 创建一个具有以下设置的 gpt-35-turbo**** 模型的新部署：
-    - 部署名称****：模型部署的唯一名称**
-    - **部署类型**：标准
-    - **模型版本**：*选择默认版本*
-    - **AI 资源**：*选择先前创建的资源*
-    - **每分钟令牌数速率限制（数千个）**：5K
+Azure AI Foundry 中的提示流工具创建基于文件的资产，用于在 Blob 存储中的文件夹内定义提示流。 在浏览提示流之前，我们来确认 Azure AI 服务资源对 Blob 存储的所需访问权限，以便能够读取其中的内容。
+
+1. 在 Azure AI Foundry 门户的导航窗格中，选择**管理中心**，并查看项目的详细信息页面，如下图所示：
+
+    ![管理中心的屏幕截图。](./media/ai-foundry-manage-project.png)
+
+1. 在**资源组**下，选择“你的资源组”，以在新“浏览器”选项卡中打开 Azure 门户中的该资源组；如果出现提示，请使用 Azure 凭据登录并关闭任何欢迎通知，以查看“资源组”页面。
+
+    资源组包含支持中心和项目的所有 Azure 资源。
+
+1. 选择你的中心的 **Azure AI 服务**资源以将其打开。 接着展开**资源管理下**部分，选择**标识**页面：
+
+    ![Azure 门户中 Azure AI 服务“标识”页面的屏幕截图。](./media/ai-services-identity.png)
+
+1. 如果系统分配的标识状态为“关闭”****，请切换为“打开”****，并保存更改。 然后等待状态更新确认。
+1. 返回到“资源组”页面，选择你的中心的**存储帐户**资源，查看其**访问控制 (IAM)** 页面：
+
+    ![Azure 门户中存储帐户访问控制页面的屏幕截图。](./media/storage-access-control.png)
+
+1. 为 Azure AI 服务资源使用的托管标识添加`Storage blob data reader`角色分配：
+
+    ![Azure 门户中存储帐户访问控制页面的屏幕截图。](./media/assign-role-access.png)
+
+1. 为 Azure AI 服务托管标识分配读取存储帐户中 Blob 所需的角色权限后，关闭 Azure 门户选项卡，并返回到 Azure AI Foundry 门户。
+1. 在 Azure AI Foundry 门户的导航窗格中，选择**转到项目**，返回到项目主页。
+
+## 部署生成式 AI 模型
+
+现在可随时部署生成式 AI 语言模型以支持提示流应用程序。
+
+1. 在项目左侧窗格的“**我的资产**”部分中，选择“**模型 + 终结点**”页。
+1. 在“**模型 + 终结点**”页的“**模型部署**”选项卡中，在“**+ 部署模型**”菜单中，选择“**部署基础模型**”。
+1. 在列表中搜索 **gpt-4o** 模型，然后选择并确认。
+1. 在部署详细信息中选择“**自定义**”，并使用以下设置部署模型：
+    - **部署名**：*有效的模型部署名*
+    - **部署类型**：全局标准
+    - **自动版本更新**：启用
+    - **模型版本**：*选择最新可用版本*
+    - **连接的 AI 资源**：*选择 Azure OpenAI 资源连接*
+    - **每分钟令牌限制（千令牌）**：50K *（或如果订阅的可用上限低于 50K，则以其为准）*
     - **内容筛选器**：DefaultV2
-    - **启用动态配额**：已禁用
 
-    > **备注**：如果当前 AI 资源位置没有可用于要部署模型的配额，系统会要求你选择其他位置，以便新建 AI 资源并连接到项目。
+    > **注意**：减少 TPM 有助于避免过度使用正在使用的订阅中可用的配额。 50,000 TPM 足以应对本练习所需的数据处理量。 如果可用配额低于上述 50,000 TPM，你仍然可完成本练习，但如果超过速率限制，可能会出现错误。
 
-1. 等待模型部署。 部署就绪后，选择“在操场中打开”****。
-1. 在聊天窗口中，输入查询 `What can you do?`。
+1. 等待部署完成。
 
-    请注意，答案是通用的，因为没有给助手特定的说明。 若要使其专注于某任务，可以更改系统提示。
+## 创建提示流
 
-1. 将“**为模型提供说明和上下文**”消息更改为以下内容：
+提示流提供一种方法来协调提示和其他活动，以定义与生成式 AI 模型的交互。 在本练习中，你将使用模板为旅行社中的 AI 助手创建基本聊天流。
 
-   ```md
-   **Objective**: Assist users with travel-related inquiries, offering tips, advice, and recommendations as a knowledgeable travel agent.
+1. 在 Azure AI Foundry 门户导航栏的**生成与自定义**部分中，选择**提示流**。
+1. 基于**聊天流模板**创建新的流，并指定`Travel-Chat`作为文件夹名。
 
-   **Capabilities**:
-   - Provide up-to-date travel information, including destinations, accommodations, transportation, and local attractions.
-   - Offer personalized travel suggestions based on user preferences, budget, and travel dates.
-   - Share tips on packing, safety, and navigating travel disruptions.
-   - Help with itinerary planning, including optimal routes and must-see landmarks.
-   - Answer common travel questions and provide solutions to potential travel issues.
-    
-   **Instructions**:
-   1. Engage with the user in a friendly and professional manner, as a travel agent would.
-   2. Use available resources to provide accurate and relevant travel information.
-   3. Tailor responses to the user's specific travel needs and interests.
-   4. Ensure recommendations are practical and consider the user's safety and comfort.
-   5. Encourage the user to ask follow-up questions for further assistance.
-   ```
+    会为你创建一个简单的聊天流。
 
-1. 选择“应用更改”。
-1. 在聊天窗口中，输入与之前相同的查询：`What can you do?` 请注意响应中的更改。
+1. 要测试流，你需要计算，启动可能需要一些时间；因此，在浏览和修改默认流时，选择**启动计算会话**。
 
-现在，你已熟悉了已部署的 GPT 模型的系统消息，接下来可以通过使用提示流进一步自定义应用程序。
+1. 查看提示流，它由一系列*输入*、*输出*和*工具*组成。 你可以在左侧的编辑窗格中展开并编辑这些对象的属性，在右侧以图形形式查看整体流：
 
-## 在 Azure AI Foundry 门户中创建和运行聊天流
+    ![提示流编辑器的屏幕截图。](./media/prompt-flow.png)
 
-可以从模板创建新流，也可以基于操场中的配置创建流。 由于已在操场中试验，因此你将使用此选项创建新的流。
-
-<details>  
-    <summary><b>故障排除提示</b>：权限错误</summary>
-    <p>如果新建提示流时收到权限错误，请尝试执行以下操作进行故障排除：</p>
-    <ul>
-        <li>在 Azure 门户中，选择 AI 服务资源。</li>
-        <li>在“资源管理”下的“标识”选项卡中，确认它是系统分配的托管标识。</li>
-        <li>导航到关联的存储帐户。 在 IAM 页上，添加角色分配<em>存储 Blob 数据读取器</em>。</li>
-        <li>在“<strong>分配访问权限</strong>”下，选择“<strong>托管标识</strong>”、“<strong>+ 选择成员</strong>”，选择“<strong>所有系统分配的托管标识</strong>”，然后选择 Azure AI 服务资源。</li>
-        <li>查看并分配以保存新设置，然后重试上一步。</li>
-    </ul>
-</details>
-
-1. 在“聊天操场”中，从顶部栏中选择“提示流”。********
-1. 输入 `Travel-Chat` 作为文件夹名称。
-
-    会为你创建一个简单的聊天流。 请注意，有两个输入（聊天历史记录和用户的问题）、一个将与已部署的语言模型连接的 LLM 节点，以及一个输出来反映聊天中的响应。
-
-    为了能够测试流，需要计算。
-
-1. 从顶部栏中选择**启动计算会话**。
-1. 计算会话需要 1-3 分钟才能启动。
-1. 查找名为**聊天**的 LLM 节点。 请注意，提示已包含你在聊天操场中指定的系统提示。
-
-    仍需将 LLM 节点连接到已部署的模型。
-
-1. 在 LLM 节点部分中，对于**连接**，请选择创建 AI 中心时为你创建的连接。
-1. 对于 **Api**，请选择**聊天**。
-1. 对于“deployment_name”，请选择已部署的 **gpt-35-turbo** 模型。****
-1. 对于 **response_format**，请选择 **{"type":"text"}**。
-1. 查看提示字段并确保其如下所示：
+1. 查看**输入**窗格，注意其中有两个输入项（聊天历史记录和用户的问题）
+1. 查看**输出**窗格，注意有一个反映模型答案的输出。
+1. 查看**聊天** LLM 工具窗格，其中包含向模型提交提示所需的信息。
+1. 在**聊天** LLM 工具窗格中，针对**连接**，选择你的 AI 中心中 Azure OpenAI 服务资源的连接。 然后配置以下连接属性：
+    - **** Api：chat
+    - **deployment_name**：*已部署的 gpt-4o 模型*
+    - response_format****：{"type":"text"}
+1. 按如下所示修改**提示**字段：
 
    ```yml
-   system:
+   # system:
    **Objective**: Assist users with travel-related inquiries, offering tips, advice, and recommendations as a knowledgeable travel agent.
 
    **Capabilities**:
@@ -130,46 +126,73 @@ lab:
    5. Encourage the user to ask follow-up questions for further assistance.
 
    {% for item in chat_history %}
-   user:
+   # user:
    {{item.inputs.question}}
-   assistant:
+   # assistant:
    {{item.outputs.answer}}
    {% endfor %}
 
-   user:
+   # user:
    {{question}}
    ```
 
-### 测试和部署流
+    阅读已添加的提示，确认你已了解其内容。 它包括系统消息（包含目标、功能定义和若干说明），以及聊天历史记录（按排序排列，展示每个用户的问题输入及此前的助理答案输出）
 
-开发流后，可以使用聊天窗口测试流。
+1. 在**聊天** LLM 工具的**输入**部分（提示下方），请确认已设置以下变量：
+    - **问题** (ring)： ${inputs.question}
+    - **chat_history** (string): ${inputs.chat_history}
 
-1. 确保计算会话正在运行。
-1. 选择“保存”。
-1. 选择**聊天**以测试流。
-1. 输入查询：`I have one day in London, what should I do?` 并查看输出。
+1. 保存对该流的更改。
 
-    当对创建的流的行为感到满意时，即可部署流。
+    > **注意**：本练习将坚持使用简单的聊天流，但请注意，提示流编辑器还包含许多其他可添加到流中的工具，支持创建复杂的对话逻辑。
 
-1. 选择“**部署**”以使用以下设置部署流：
+## 测试流
+
+开发流后，可以使用“聊天”窗口测试流。
+
+1. 确保计算会话正在运行。 如果尚未启动，请等待一段时间，直至启动完成。
+1. 在工具栏上选择**聊天**，以打开**聊天**窗格，并等待聊天初始化完成。
+1. 输入查询：`I have one day in London, what should I do?` 并查看输出。 “聊天”窗格应如下所示：
+
+    ![提示流聊天窗格的屏幕截图。](./media/prompt-flow-chat.png)
+
+## 部署流
+
+当对创建的流的行为感到满意时，即可部署流。
+
+> **注意**：部署可能需要较长时间，并可能受到订阅或租户容量限制的影响。
+
+1. 在工具栏上选择**部署**，并按照以下设置部署流：
     - 基本设置：
         - **终结点**：新建
         - **终结点名称**：输入唯一名称**
         - **部署名称**：输入唯一名称**
         - **虚拟机**：Standard_DS3_v2
-        - **实例计数**：3
-        - 推理数据收集****：已启用
+        - 实例计数：1
+        - **推理数据收集**：已禁用
     - 高级设置****：
         - 使用默认设置**
-1. 在 Azure AI Foundry 门户的项目中，在左侧导航窗格中“**我的资产**”下，选择“**模型 + 终结点**”页。
-1. 请注意，默认情况下会列出**模型部署**，包括已部署的语言模型和已部署的流。 在列出并成功创建部署之前，可能需要一些时间。
-1. 部署成功后，请选择它。 然后，在其****“测试”页上输入提示“`What is there to do in San Francisco?`”并查看响应。
-1. 输入提示“`Where else could I go?`”并查看响应。
-1. 查看终结点的“使用”**** 页。请注意，它包含连接信息和示例代码，你可以使用它们为终结点生成客户端应用程序，这样就能够将提示流解决方案集成到一个用作自定义 Copilot 的应用程序中。
+1. 在 Azure AI Foundry 门户左侧导航窗格的**我的资产**部分，选择**模型 + 终结点**页面。
 
-## 删除 Azure 资源
+    如果页面打开 gpt-4o 模型，请使用其“后退”**** 按钮，返回查看所有模型和终结点。
 
-浏览完 Azure AI Foundry 门户后，应删除已创建的资源，以避免产生不必要的 Azure 成本。
+1. 初始页面可能只显示你已部署的模型。 部署显示在列表中并成功创建可能需要一段时间。
+1. 部署*成功*后，请选择它。 然后，查看其**测试**页面。
+
+    > **提示**：如果测试页面显示终结点状态为不正常，请返回到**模型和终结点**，等待约一分钟后刷新视图并重新选择该终结点。
+
+1. 输入提示“`What is there to do in San Francisco?`”并查看响应。
+1. 输入提示“`Tell me something about the history of the city.`”并查看响应。
+
+    “测试”窗格应如下所示：
+
+    ![已部署的提示流终结点测试页面的屏幕截图。](./media/deployed-flow.png)
+
+1. 查看终结点的**使用**页面。请注意，该页面提供连接信息和示例代码，便于你使用它们为终结点生成客户端应用程序，将提示流解决方案集成到生成式 AI 的应用程序中。
+
+## 清理
+
+完成对提示流的探索后，应删除已创建的资源，避免产生不必要的 Azure 成本。
 
 - 导航到 Azure 门户，地址为 `https://portal.azure.com`[](https://portal.azure.com)。
 - 在 Azure 门户的**主页**上，选择“资源组”。
