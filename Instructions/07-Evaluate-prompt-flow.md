@@ -1,69 +1,87 @@
 ---
 lab:
-  title: 评估生成式 AI 性能
-  description: 了解如何评估模型和聊天流，以优化聊天应用的性能及其适时响应的能力。
+  title: 评估生成式 AI 模型的性能
+  description: 了解如何评估模型和提示，以优化聊天应用的性能及响应的适当性。
 ---
 
-# 评估生成式 AI 性能
+# 评估生成式 AI 模型的性能
 
-在本练习中，将探索内置和自定义评估，以使用 Azure AI Foundry 门户评估和比较 AI 应用程序的性能。
+在本练习中，你将使用手动和自动化评估，以评估 Azure AI Foundry 门户中模型的性能。
 
 该练习大约需要 **30** 分钟。
 
-## 创建 Azure AI 中心和项目
+> **注意**：本练习中使用的一些技术处于预览版或积极开发阶段。 可能会遇到一些意想不到的行为、警告或错误。
 
-Azure AI 中心会提供协作式工作区，可在其中定义一个或多个项目。** 让我们创建项目和 Azure AI 中心。
+## 创建 Azure AI Foundry 项目
 
-1. 在 Web 浏览器中打开 [Azure AI Foundry 门户](https://ai.azure.com)，网址为：`https://ai.azure.com`，然后使用 Azure 凭据登录。
+让我们首先创建 Azure AI Foundry 项目。
+
+1. 在 Web 浏览器中打开 [Azure AI Foundry 门户](https://ai.azure.com)，网址为：`https://ai.azure.com`，然后使用 Azure 凭据登录。 关闭首次登录时打开的任何使用技巧或快速入门窗格，如有必要，使用左上角的 **Azure AI Foundry** 徽标导航到主页，类似下图所示（若已打开**帮助**面板，请关闭）：
+
+    ![Azure AI Foundry 门户的屏幕截图。](./media/ai-foundry-home.png)
 
 1. 在主页中，选择“**+ 创建项目**”。
-1. 在“**创建项目**”向导中，输入合适的项目名称（例如 `my-ai-project`），然后查看为支持项目而自动创建的 Azure 资源。
+1. 在**创建项目**向导中，输入项目的有效名，如果出现建议使用现有中心的提示，请选择新建中心的选项。 然后查看将自动创建的 Azure 资源以支持中心和项目。
 1. 选择“**自定义**”并为中心指定以下设置：
-    - **中心名称**：*唯一名称 - 例如`my-ai-hub`*
+    - **中心名**：*有效的中心名*
     - **订阅**：Azure 订阅
-    - **资源组**：*新建资源组并提供唯一名称（例如 `my-ai-resources`），或选择现有资源组*
-    - **位置**：选择“**帮助我选择**”，然后在“位置帮助程序”窗口中选择“**gpt-4**”，并使用推荐的区域\*
-    - **连接 Azure AI 服务或 Azure OpenAI**：*新建 AI 服务资源并提供适当的名称（例如 `my-ai-services`）或使用现有资源*
+    - **资源组**：*创建或选择资源组*
+    - **位置**：选择以下任一区域\*：
+        - 美国东部 2
+        - 法国中部
+        - 英国南部
+        - 瑞典中部
+    - **连接 Azure AI 服务或 Azure OpenAI**：*新建 AI 服务资源*
     - **连接 Azure AI 搜索**：跳过连接
 
-    > \*模型配额在租户级别受区域配额的限制。 如果稍后在练习中达到配额限制，你可能需要在不同的区域中创建另一个资源。
+    > \* 撰写本文时，这些区域支持评估 AI 安全指标。 模型可用性受区域配额的约束。 如果稍后在练习中达到配额限制，可能需要在不同的区域中创建另一个资源。
 
 1. 选择“**下一步**”查看配置。 然后，选择“**创建**”并等待该进程完成。
 1. 创建项目后，关闭显示的所有使用技巧，并查看 Azure AI Foundry 门户中的项目页面，如下图所示：
 
     ![Azure AI Foundry 门户中 Azure AI 项目详细信息的屏幕截图。](./media/ai-foundry-project.png)
 
-## 部署 GPT 模型
+## 部署模型
 
-要在提示流中使用语言模型，首先需要部署模型。 Azure AI Foundry 门户允许部署可在流中使用的 OpenAI 模型。
+在本练习中，你将评估 gpt-4o-mini 模型的性能。 你还将使用 gpt-4o 模型生成 AI 辅助的评估指标。
 
-1. 使用左侧菜单导航到“**我的资源**”部分下的“**模型 + 终结点**”页。
-1. 选择“**+ 部署模型**”按钮，然后选择“**部署基础模型**”选项。
-1. 在“**部署模型**”向导中选择“**自定义**”，并使用以下设置新建 **GPT-4** 模型部署：
-    - 部署名称****：模型部署的唯一名称**
-    - **部署类型**：标准
-    - **模型版本**：*选择默认版本*
-    - **AI 资源**：*选择先前创建的资源*
-    - **每分钟令牌数速率限制（数千个）**：5K
+1. 在项目左侧窗格的**我的资产**部分中，选择**模型 + 终结点**页面。
+1. 在“**模型 + 终结点**”页的“**模型部署**”选项卡中，在“**+ 部署模型**”菜单中，选择“**部署基础模型**”。
+1. 在列表中搜索 **gpt-4o** 模型，然后选择并确认。
+1. 在部署详细信息中选择“**自定义**”，并使用以下设置部署模型：
+    - **部署名**：*有效的模型部署名*
+    - **部署类型**：全局标准
+    - **自动版本更新**：启用
+    - **模型版本**：*选择最新可用版本*
+    - **连接的 AI 资源**：*选择 Azure OpenAI 资源连接*
+    - **每分钟令牌限制（千令牌）**：50K *（或如果订阅的可用上限低于 50K，则以其为准）*
     - **内容筛选器**：DefaultV2
-    - **启用动态配额**：已禁用
 
-    > **备注**：如果当前 AI 资源位置没有可用于要部署模型的配额，系统会要求你选择其他位置，以便新建 AI 资源并连接到项目。
+    > **注意**：减少 TPM 有助于避免过度使用正在使用的订阅中可用的配额。 50,000 TPM 足以应对本练习所需的数据处理量。 如果可用配额低于上述 50,000 TPM，你仍然可完成本练习，但如果超过速率限制，可能会出现错误。
 
-1. 等待模型部署。 部署就绪后，选择“在操场中打开”****。
-1. 在“**提供模型说明和上下文**”文本框中，将内容更改为以下内容：
+1. 等待部署完成。
+1. 返回到**模型 + 终结点**页面，重复前述步骤，部署具有相同设置的 **gpt-4o-mini** 模型。
+
+## 手动评估模型
+
+可以根据测试数据手动审阅模型响应。 手动审阅可以让你每次测试不同的输入，以评估模型是否按预期执行。
+
+1. 在新的“浏览器”选项卡中，从`https://raw.githubusercontent.com/MicrosoftLearning/mslearn-ai-studio/refs/heads/main/data/travel_evaluation_data.csv`中下载[travel_evaluation_data.csv](https://raw.githubusercontent.com/MicrosoftLearning/mslearn-ai-studio/refs/heads/main/data/travel_evaluation_data.csv)，并将其保存在本地文件夹中。
+1. 返回到 Azure AI Foundry 门户选项卡，在导航窗格中的 **评估和改进**部分，选择**评估**。
+1. 在**评估**页面中，查看**手动评估**选项卡，然后选择 **+ 新建手动评估**。
+1. 将**系统消息**更改为以下 AI 旅行助理的说明：
 
    ```
-   **Objective**: Assist users with travel-related inquiries, offering tips, advice, and recommendations as a knowledgeable travel agent.
+   Objective: Assist users with travel-related inquiries, offering tips, advice, and recommendations as a knowledgeable travel agent.
 
-   **Capabilities**:
+   Capabilities:
    - Provide up-to-date travel information, including destinations, accommodations, transportation, and local attractions.
    - Offer personalized travel suggestions based on user preferences, budget, and travel dates.
    - Share tips on packing, safety, and navigating travel disruptions.
    - Help with itinerary planning, including optimal routes and must-see landmarks.
    - Answer common travel questions and provide solutions to potential travel issues.
     
-   **Instructions**:
+   Instructions:
    1. Engage with the user in a friendly and professional manner, as a travel agent would.
    2. Use available resources to provide accurate and relevant travel information.
    3. Tailor responses to the user's specific travel needs and interests.
@@ -71,29 +89,41 @@ Azure AI 中心会提供协作式工作区，可在其中定义一个或多个�
    5. Encourage the user to ask follow-up questions for further assistance.
    ```
 
-1. 选择“**应用更改**”。
-1. 在聊天（历史记录）窗口中，输入查询：`What can you do?`，以验证语言模型是否按预期运行。
+1. 在**配置**部分的**模型**列表中，选择 **gpt-4o-mini** 模型部署。
+1. 在**手动评估结果**部分中，选择**导入测试数据**，并上传之前下载的**travel_evaluation_data.csv** 文件；映射数据集字段，如下所示：
+    - **输入**：问题
+    - **预期响应**：ExpectedResponse
+1. 审阅测试文件中的问题和预期答案 - 你将使用这些问题和答案来评估模型生成的响应。
+1. 从顶部栏中选择“运行”，以便为添加为输入的所有问题生成输出。**** 几分钟后，模型的响应应显示在新的 **输出**列中，如下所示：
 
-现在，已部署的模型包含了更新后的系统消息，可以评估模型。
+    ![Azure AI Foundry 门户中的手动评估页面屏幕截图。](./media/manual-evaluation.png)
 
-## 在 Azure AI Studio Foundry 门户中手动评估语言模型
+1. 审阅每个问题的输出，将模型生成的输出与预期答案对比，并在每个响应右下角选择拇指向上或向下图标来“评分”结果。
+1. 对响应评分后，请审阅列表上方的摘要卡片。 然后在工具栏中，选择**保存结果**并分配合适的名称。 保存结果后，你可以稍后检索，以便进一步评估或与其他模型比较。
 
-可以根据测试数据手动审阅模型响应。 通过手动审阅，可以每次测试一个不同的输入，以评估模型是否按预期方式执行。
+## 使用自动评估
 
-1. 在“**聊天操场**”中，从顶部栏中选择“**评估**”下拉列表，然后选择“**手动评估**”。
-1. 将“**系统消息**”更改为上面所用的同一消息（此处再次包含）：
+虽然手动比较模型输出与自己的预期响应可能是评估模型性能的有效方法，但在预期存在各种问题和响应的情况下，这种方法较为耗时；而且它提供的标准化指标的方式较少，难以用于比较不同的模型和提示组合。
+
+自动评估是一种尝试计算指标并使用 AI 评估相应的一致性、相关性及其他因素，以解决这些不足的方法。
+
+1. 使用**手动评估**页标题旁边的后退箭头（&larr;****），返回到**评估**页面。
+1. 查看**自动评估**选项卡。
+1. 选择**创建新评估**，在提示出现时，选择评估**模型和提示**的选项
+1. 在**创建新评估**页的**基本信息**部分中，审阅默认自动生成的评估名（如需更改可修改），然后选择 **gpt-40-mini** 模型部署。
+1. 将**系统消息**更改为之前使用的 AI 旅行助理的说明：
 
    ```
-   **Objective**: Assist users with travel-related inquiries, offering tips, advice, and recommendations as a knowledgeable travel agent.
+   Objective: Assist users with travel-related inquiries, offering tips, advice, and recommendations as a knowledgeable travel agent.
 
-   **Capabilities**:
+   Capabilities:
    - Provide up-to-date travel information, including destinations, accommodations, transportation, and local attractions.
    - Offer personalized travel suggestions based on user preferences, budget, and travel dates.
    - Share tips on packing, safety, and navigating travel disruptions.
    - Help with itinerary planning, including optimal routes and must-see landmarks.
    - Answer common travel questions and provide solutions to potential travel issues.
     
-   **Instructions**:
+   Instructions:
    1. Engage with the user in a friendly and professional manner, as a travel agent would.
    2. Use available resources to provide accurate and relevant travel information.
    3. Tailor responses to the user's specific travel needs and interests.
@@ -101,67 +131,33 @@ Azure AI 中心会提供协作式工作区，可在其中定义一个或多个�
    5. Encourage the user to ask follow-up questions for further assistance.
    ```
 
-1. 在“手动评估结果”部分中，你将添加五个输入以查看其输出。**** 输入以下五个问题作为五个单独的 **输入**：
+1. 在**配置测试数据**部分中，请注意，可以使用 GPT 模型生成测试数据（然后可以编辑和补充数据以符合你的期望）、使用现有数据集或上传文件。 在本练习中，选择**使用现有数据集**，然后选择**travel_evaluation_data_csv_*xxxx...*** 数据集（该数据集是你之前上传.csv文件时创建的）。
+1. 审阅数据集中的示例行，然后在**选择数据列**部分中，选择以下列的映射：
+    - **查询**：问题
+    - **上下文**：*将此项留空。它用于在为模型关联上下文数据源时评估“基础性”。*
+    - **基本事实**：ExpectedAnswer
+1. 在**选择要评估的内容**部分中，选择以下<u>所有</u>评估类别：
+    - AI 质量（AI 辅助）
+    - 风险与安全（AI 辅助）
+    - AI 质量 (NLP)
+1. 在**选择模型部署作为判断**列表中，选择 **gpt-4o** 模型。 此模型将用于评估 ***gpt-4o-mini** 模型的响应，重点考察语言质量及标准的生成式 AI 比较指标。
+1. 选择**创建**开始评估流程，等待评估完成。 可能需要几分钟时间。
 
-   `Can you provide a list of the top-rated budget hotels in Rome?`
+    > **提示**：如果出现“正在设置项目权限”的错误提示，请稍等一分钟，然后再次选择**创建**。 新创建的项目在资源权限传播完成前可能需要一些时间。
 
-   `I'm looking for a vegan-friendly restaurant in New York City. Can you help?`
+1. 评估完成后，请向下滚动（如有必要），查看**指标仪表板**区域，并查看 **AI 质量（AI 辅助）** 指标：
 
-   `Can you suggest a 7-day itinerary for a family vacation in Orlando, Florida?`
+    ![Azure AI Foundry 门户中的 AI 质量指标的屏幕截图。](./media/ai-quality-metrics.png)
 
-   `Can you help me plan a surprise honeymoon trip to the Maldives?`
+    使用 **<sup>(i)</sup>** 图标查看指标定义。
 
-   `Are there any guided tours available for the Great Wall of China?`
+1. 查看**风险与安全**选项卡，查看与潜在有害内容相关的各项指标。
+1. 查看 **AI 质量 (NLP**) 选项卡，以查看生成式 AI 模型的标准指标。
+1. 向上滚动到页面顶部（如有必要），然后选择**数据**选项卡，以查看评估中的原始数据。 数据包括每个输入的指标，以及 gpt-4o 模型在评估响应时所应用的推理说明。
 
-1. 从顶部栏中选择“运行”，以便为添加为输入的所有问题生成输出。****
-1. 现在，可以通过选择响应右下角的拇指向上或向下图标来手动审阅每个问题的输出。 对每个响应进行评价，确保至少在评价中包含一个拇指向上和一个拇指向下回复。
-1. 从顶部栏中选择“**保存结果**”。 输入 `manual_evaluation_results` 作为结果的名称。
-1. 使用左侧菜单导航到“**评估**”。
-1. 选择“手动评估”选项卡以查找刚刚保存的手动评估。**** 请注意，可以浏览之前创建的手动评估，从上次中断的地方继续，并保存更新后的评估。
+    ![Azure AI Foundry 门户中评估数据的屏幕截图。](./media/evaluation-data.png)
 
-## 使用内置指标评估聊天应用
-
-使用提示流创建聊天应用程序后，可以通过执行批处理运行并使用内置指标评估流的性能来评估流。
-
-![用于评估的输入数据集的构造图。](./media/diagram-dataset-evaluation.png)
-
-为了评估聊天流，提供的用户查询和聊天响应将作为评估的输入。
-
-为了节省时间，我们创建了批处理输出数据集，其中包含由提示流处理的多个输入的结果。 每个结果都存储在后续步骤将进行评估的数据集中。
-
-1. 选择“**自动运行评估**”选项卡，并使用以下设置创建**新评估**：<details>  
-      <summary><b>故障排除提示</b>：权限错误</summary>
-        <p>如果新建提示流时收到权限错误，请尝试执行以下操作进行故障排除：</p>
-        <ul>
-          <li>在 Azure 门户中，选择 AI 服务资源。</li>
-          <li>在“资源管理”下的“标识”选项卡中，确认它是系统分配的托管标识。</li>
-          <li>导航到关联的存储帐户。 在 IAM 页上，添加角色分配<em>存储 Blob 数据读取器</em>。</li>
-          <li>在“<strong>分配访问权限</strong>”下，选择“<strong>托管标识</strong>”、“<strong>+ 选择成员</strong>”，然后选择“<strong>所有系统分配的托管标识</strong>”。</li>
-          <li>查看并分配以保存新设置，然后重试上一步。</li>
-        </ul>
-    </details>
-
-    - **要评估什么内容？**：数据集
-    - **评估名称**：输入唯一名称**
-    - 选择“下一步”****
-    - **选择要评估的数据**：添加数据集
-        - 下载[验证数据集](https://raw.githubusercontent.com/MicrosoftLearning/mslearn-ai-studio/main/data/travel-qa.jsonl) (`https://raw.githubusercontent.com/MicrosoftLearning/mslearn-ai-studio/main/data/travel-qa.jsonl`)，将其保存为 JSONL 文件并上传到 UI。
-
-    > **备注**：设备可能默认将文件另存为 .txt 文件。 选择所有文件并移除 .txt 后缀，以确保将文件另存为 JSONL。
-
-    - 选择“下一步”****
-    - **选择指标**：一致性、流畅性
-    - 连接****：*你的 AI 服务连接*
-    - **部署名称/模型**：*已部署的 GPT-4 模型*
-    - **查询**：选择“**查询**”作为数据源
-    - **响应**：选择“**响应**”作为数据源
-      
-1. 选择“**下一步**”，然后查看数据并“**提交**”新评估。
-1. 等待评估完成，可能需要刷新。
-1. 选择刚刚创建的评估运行。
-1. 在“**报表**”选项卡中浏览“**指标仪表板**”，并在“**数据**”选项卡中浏览“**详细指标结果**”。
-
-## 删除 Azure 资源
+## 清理
 
 完成对 Azure AI Foundry 的探索后，应删除已创建的资源，以避免产生不必要的 Azure 成本。
 
