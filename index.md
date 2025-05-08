@@ -1,10 +1,8 @@
 ---
-title: 开发生成式 AI 解决方案
+title: 在 Azure 中开发生成式 AI 解决方案
 permalink: index.html
 layout: home
 ---
-
-# 在 Azure 中开发生成式 AI 解决方案
 
 以下练习旨在提供动手学习体验，在其中可探索开发人员在 Microsoft Azure 上生成生成式 AI 解决方案时执行的常见任务。
 
