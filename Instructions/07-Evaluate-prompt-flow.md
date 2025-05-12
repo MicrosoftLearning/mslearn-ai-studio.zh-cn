@@ -23,7 +23,7 @@ lab:
 1. 在主页中，选择“**+ 创建项目**”。
 1. 在**创建项目**向导中，输入项目的有效名，如果出现建议使用现有中心的提示，请选择新建中心的选项。 然后查看将自动创建的 Azure 资源以支持中心和项目。
 1. 选择“**自定义**”并为中心指定以下设置：
-    - **中心名**：*有效的中心名*
+    - **中心名称**：*中心的有效名称*
     - **订阅**：Azure 订阅
     - **资源组**：*创建或选择资源组*
     - **位置**：选择以下任一区域\*：
@@ -66,31 +66,17 @@ lab:
 
 可以根据测试数据手动审阅模型响应。 手动审阅可以让你每次测试不同的输入，以评估模型是否按预期执行。
 
-1. 在新的“浏览器”选项卡中，从`https://raw.githubusercontent.com/MicrosoftLearning/mslearn-ai-studio/refs/heads/main/data/travel_evaluation_data.csv`中下载[travel_evaluation_data.csv](https://raw.githubusercontent.com/MicrosoftLearning/mslearn-ai-studio/refs/heads/main/data/travel_evaluation_data.csv)，并将其保存在本地文件夹中。
+1. 在新的浏览器标签页中，从 `https://raw.githubusercontent.com/MicrosoftLearning/mslearn-ai-studio/refs/heads/main/data/travel_evaluation_data.jsonl` 中下载  [travel_evaluation_data.jsonl](https://raw.githubusercontent.com/MicrosoftLearning/mslearn-ai-studio/refs/heads/main/data/travel_evaluation_data.jsonl) 并将其保存在本地文件夹中，文件名为 **travel_evaluation_data.jsonl**（请确认保存为 .jsonl 文件，而不是 .txt 文件）。
 1. 返回到 Azure AI Foundry 门户选项卡，在导航窗格中的 **评估和改进**部分，选择**评估**。
 1. 在**评估**页面中，查看**手动评估**选项卡，然后选择 **+ 新建手动评估**。
+1. 在**配置**部分的**模型**列表中，选择 **gpt-4o-mini** 模型部署。
 1. 将**系统消息**更改为以下 AI 旅行助理的说明：
 
    ```
-   Objective: Assist users with travel-related inquiries, offering tips, advice, and recommendations as a knowledgeable travel agent.
-
-   Capabilities:
-   - Provide up-to-date travel information, including destinations, accommodations, transportation, and local attractions.
-   - Offer personalized travel suggestions based on user preferences, budget, and travel dates.
-   - Share tips on packing, safety, and navigating travel disruptions.
-   - Help with itinerary planning, including optimal routes and must-see landmarks.
-   - Answer common travel questions and provide solutions to potential travel issues.
-    
-   Instructions:
-   1. Engage with the user in a friendly and professional manner, as a travel agent would.
-   2. Use available resources to provide accurate and relevant travel information.
-   3. Tailor responses to the user's specific travel needs and interests.
-   4. Ensure recommendations are practical and consider the user's safety and comfort.
-   5. Encourage the user to ask follow-up questions for further assistance.
+   Assist users with travel-related inquiries, offering tips, advice, and recommendations as a knowledgeable travel agent.
    ```
 
-1. 在**配置**部分的**模型**列表中，选择 **gpt-4o-mini** 模型部署。
-1. 在**手动评估结果**部分中，选择**导入测试数据**，并上传之前下载的**travel_evaluation_data.csv** 文件；映射数据集字段，如下所示：
+1. 在**手动评估结果**部分中，选择**导入测试数据**，并上传之前下载的**travel_evaluation_data.jsonl** 文件；映射数据集字段，如下所示：
     - **输入**：问题
     - **预期响应**：ExpectedResponse
 1. 审阅测试文件中的问题和预期答案 - 你将使用这些问题和答案来评估模型生成的响应。
@@ -114,24 +100,10 @@ lab:
 1. 将**系统消息**更改为之前使用的 AI 旅行助理的说明：
 
    ```
-   Objective: Assist users with travel-related inquiries, offering tips, advice, and recommendations as a knowledgeable travel agent.
-
-   Capabilities:
-   - Provide up-to-date travel information, including destinations, accommodations, transportation, and local attractions.
-   - Offer personalized travel suggestions based on user preferences, budget, and travel dates.
-   - Share tips on packing, safety, and navigating travel disruptions.
-   - Help with itinerary planning, including optimal routes and must-see landmarks.
-   - Answer common travel questions and provide solutions to potential travel issues.
-    
-   Instructions:
-   1. Engage with the user in a friendly and professional manner, as a travel agent would.
-   2. Use available resources to provide accurate and relevant travel information.
-   3. Tailor responses to the user's specific travel needs and interests.
-   4. Ensure recommendations are practical and consider the user's safety and comfort.
-   5. Encourage the user to ask follow-up questions for further assistance.
+   Assist users with travel-related inquiries, offering tips, advice, and recommendations as a knowledgeable travel agent.
    ```
 
-1. 在**配置测试数据**部分中，请注意，可以使用 GPT 模型生成测试数据（然后可以编辑和补充数据以符合你的期望）、使用现有数据集或上传文件。 在本练习中，选择**使用现有数据集**，然后选择**travel_evaluation_data_csv_*xxxx...*** 数据集（该数据集是你之前上传.csv文件时创建的）。
+1. 在**配置测试数据**部分中，请注意，可以使用 GPT 模型生成测试数据（然后可以编辑和补充数据以符合你的期望）、使用现有数据集或上传文件。 在本练习中，选择**使用现有数据集**，然后选择**travel_evaluation_data_jsonl_*xxxx...*** 数据集（该数据集是你之前上传 .jsonl 文件时创建的）。
 1. 审阅数据集中的示例行，然后在**选择数据列**部分中，选择以下列的映射：
     - **查询**：问题
     - **上下文**：*将此项留空。它用于在为模型关联上下文数据源时评估“基础性”。*
@@ -140,7 +112,7 @@ lab:
     - AI 质量（AI 辅助）
     - 风险与安全（AI 辅助）
     - AI 质量 (NLP)
-1. 在**选择模型部署作为判断**列表中，选择 **gpt-4o** 模型。 此模型将用于评估 ***gpt-4o-mini** 模型的响应，重点考察语言质量及标准的生成式 AI 比较指标。
+1. 在**选择模型部署作为判断**列表中，选择 **gpt-4o** 模型。 此模型将用于评估 **gpt-4o-mini** 模型的响应，重点考察语言质量及标准的生成式 AI 比较指标。
 1. 选择**创建**开始评估流程，等待评估完成。 可能需要几分钟时间。
 
     > **提示**：如果出现“正在设置项目权限”的错误提示，请稍等一分钟，然后再次选择**创建**。 新创建的项目在资源权限传播完成前可能需要一些时间。
