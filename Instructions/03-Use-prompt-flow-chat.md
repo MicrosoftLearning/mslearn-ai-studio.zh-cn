@@ -4,7 +4,7 @@ lab:
   description: 了解如何使用提示流管理对话，并确保构建和编排提示以获得最佳结果。
 ---
 
-# 使用提示流管理聊天应用中的对话
+## 使用提示流管理聊天应用中的对话
 
 在本练习中，将使用 Azure AI Foundry 门户的提示流创建自定义聊天应用，使用用户提示和聊天历史记录作为输入，并使用 Azure OpenAI 中的 GPT 模型生成输出。
 
@@ -12,44 +12,31 @@ lab:
 
 > **注意**：本练习中使用的一些技术处于预览版或积极开发阶段。 可能会遇到一些意想不到的行为、警告或错误。
 
-## 创建 Azure AI Foundry 项目
+## Azure AI Foundry 中心和项目
 
-让我们首先创建 Azure AI Foundry 项目。
+我们将在本练习中使用的 Azure AI Foundry 功能，需要基于 Azure AI Foundry *中心*资源的项目。
 
-1. 在 Web 浏览器中打开 [Azure AI Foundry 门户](https://ai.azure.com)，网址为：`https://ai.azure.com`，然后使用 Azure 凭据登录。 关闭首次登录时打开的任何使用技巧或快速入门窗格，如有必要，请使用左上角的 **Azure AI Foundry** 徽标导航到主页，如下图所示：
+1. 在 Web 浏览器中打开 [Azure AI Foundry 门户](https://ai.azure.com)，网址为：`https://ai.azure.com`，然后使用 Azure 凭据登录。 关闭首次登录时打开的任何使用技巧或快速入门窗格，如有必要，使用左上角的 **Azure AI Foundry** 徽标导航到主页，类似下图所示（若已打开**帮助**面板，请关闭）：
 
     ![Azure AI Foundry 门户的屏幕截图。](./media/ai-foundry-home.png)
 
-1. 在主页中，选择“**+ 创建项目**”。
-1. 在**创建项目**向导中，输入项目的有效名，如果出现建议使用现有中心的提示，请选择新建中心的选项。 然后查看将自动创建的 Azure 资源以支持中心和项目。
-1. 选择“**自定义**”并为中心指定以下设置：
-    - **中心名**：*有效的中心名*
+1. 在浏览器中，导航到 `https://ai.azure.com/managementCenter/allResources` 并选择“**创建**”。 然后选择创建新的 **AI 中心资源**的选项。
+1. 在“**创建项目**”向导中，输入项目的有效名称，如果建议使用现有中心，请选择用于创建新中心的选项，然后展开“**高级选项**”，为项目指定以下设置：
     - **订阅**：Azure 订阅
     - **资源组**：*创建或选择资源组*
-    - **位置**：选择**帮助我选择**，然后在“位置帮助程序”窗口中选择**gpt-4o**，并使用推荐的区域\*
-    - **连接 Azure AI 服务或 Azure OpenAI**：*新建 AI 服务资源*
-    - **连接 Azure AI 搜索**：跳过连接
+    - **中心名称**：中心的有效名称
+    - **位置**：美国东部 2 或瑞典中部\*
 
-    > \* Azure OpenAI 资源受区域模型配额约束。 如果稍后在练习中达到配额限制，你可能需要在不同的区域中创建另一个资源。
+    > \* 某些 Azure AI 资源受区域模型配额约束。 如果稍后在练习中达到配额限制，你可能需要在不同的区域中创建另一个资源。
 
-1. 选择“**下一步**”查看配置。 然后，选择“**创建**”并等待该进程完成。
-1. 创建项目后，关闭显示的所有使用技巧，并查看 Azure AI Foundry 门户中的项目页面，如下图所示：
-
-    ![Azure AI Foundry 门户中 Azure AI 项目详细信息的屏幕截图。](./media/ai-foundry-project.png)
+1. 等待创建项目。
 
 ## 配置资源授权
 
-Azure AI Foundry 中的提示流工具创建基于文件的资产，用于在 Blob 存储中的文件夹内定义提示流。 在浏览提示流之前，我们来确认 Azure AI 服务资源对 Blob 存储的所需访问权限，以便能够读取其中的内容。
+Azure AI Foundry 中的提示流工具创建基于文件的资产，用于在 Blob 存储中的文件夹内定义提示流。 在浏览提示流之前，我们来确认 Azure AI Foundry 资源具有对 Blob 存储的所需访问权限，以便能够读取其中的内容。
 
-1. 在 Azure AI Foundry 门户的导航窗格中，选择**管理中心**，并查看项目的详细信息页面，如下图所示：
-
-    ![管理中心的屏幕截图。](./media/ai-foundry-manage-project.png)
-
-1. 在**资源组**下，选择“你的资源组”，以在新“浏览器”选项卡中打开 Azure 门户中的该资源组；如果出现提示，请使用 Azure 凭据登录并关闭任何欢迎通知，以查看“资源组”页面。
-
-    资源组包含支持中心和项目的所有 Azure 资源。
-
-1. 选择你的中心的 **Azure AI 服务**资源以将其打开。 接着展开**资源管理下**部分，选择**标识**页面：
+1. 在新的浏览器标签页中，打开 [Azure 门户](https://portal.azure.com) (`https://portal.azure.com`)，如果出现提示，请使用 Azure 凭据登录；并查看包含 Azure AI 中心资源的资源组。
+1. 选择中心的 **Azure AI Foundry** 资源以将其打开。 接着展开“**资源管理**”部分，选择“**标识**”页：
 
     ![Azure 门户中 Azure AI 服务“标识”页面的屏幕截图。](./media/ai-services-identity.png)
 
@@ -58,12 +45,11 @@ Azure AI Foundry 中的提示流工具创建基于文件的资产，用于在 Bl
 
     ![Azure 门户中存储帐户访问控制页面的屏幕截图。](./media/storage-access-control.png)
 
-1. 为 Azure AI 服务资源使用的托管标识添加`Storage blob data reader`角色分配：
+1. 为 Azure AI Foundry 资源使用的托管标识的 `Storage blob data reader` 角色添加角色分配：
 
     ![Azure 门户中存储帐户访问控制页面的屏幕截图。](./media/assign-role-access.png)
 
-1. 为 Azure AI 服务托管标识分配读取存储帐户中 Blob 所需的角色权限后，关闭 Azure 门户选项卡，并返回到 Azure AI Foundry 门户。
-1. 在 Azure AI Foundry 门户的导航窗格中，选择**转到项目**，返回到项目主页。
+1. 为 Azure AI Foundry 托管标识分配读取存储帐户中 Blob 所需的角色权限后，关闭 Azure 门户选项卡，并返回到 Azure AI Foundry 门户。
 
 ## 部署生成式 AI 模型
 
@@ -93,6 +79,8 @@ Azure AI Foundry 中的提示流工具创建基于文件的资产，用于在 Bl
 1. 基于**聊天流模板**创建新的流，并指定`Travel-Chat`作为文件夹名。
 
     会为你创建一个简单的聊天流。
+
+    > **提示**：如果发生权限错误。 请等待几分钟，然后重试，如有必要，请指定其他流名称。
 
 1. 要测试流，你需要计算，启动可能需要一些时间；因此，在浏览和修改默认流时，选择**启动计算会话**。
 
