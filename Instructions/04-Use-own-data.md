@@ -14,24 +14,22 @@ lab:
 
 > **备注**：本练习基于预发布的服务，可能会有更改。
 
-## Azure AI Foundry 中心和项目
+## 创建 Azure AI Foundry 资源
 
-我们将在本练习中使用的 Azure AI Foundry 功能，需要基于 Azure AI Foundry *中心*资源的项目。
+我们首先创建一个 Azure AI Foundry 资源。
 
-1. 在 Web 浏览器中打开 [Azure AI Foundry 门户](https://ai.azure.com)，网址为：`https://ai.azure.com`，然后使用 Azure 凭据登录。 关闭首次登录时打开的任何使用技巧或快速入门窗格，如有必要，使用左上角的 **Azure AI Foundry** 徽标导航到主页，类似下图所示（若已打开**帮助**面板，请关闭）：
-
-    ![Azure AI Foundry 门户的屏幕截图。](./media/ai-foundry-home.png)
-
-1. 在浏览器中，导航到 `https://ai.azure.com/managementCenter/allResources` 并选择“**创建**”。 然后选择创建新的 **AI 中心资源**的选项。
-1. 在“**创建项目**”向导中，输入项目的有效名称，如果建议使用现有中心，请选择用于创建新中心的选项，然后展开“**高级选项**”，为项目指定以下设置：
+1. 在 Web 浏览器中打开 [Azure 门户](https://portal.azure.com) (`https://portal.azure`)，然后使用 Azure 凭据登录。 关闭首次登录时弹出的所有提示或快速入门窗格。
+1. 使用以下设置，创建新的 `Azure AI Foundry` 资源：
     - **订阅**：Azure 订阅
     - **资源组**：*创建或选择资源组*
-    - **中心名称**：中心的有效名称
-    - **位置**：美国东部 2 或瑞典中部\*
+    - **名称**：*Azure AI Foundry 资源的有效名称*
+    - **区域**：选择以下区域之一：
+        - 美国东部 2
+        - 瑞典中部
+    - **默认项目名称**：*项目的有效名称*
 
-    > \* 某些 Azure AI 资源受区域模型配额约束。 如果稍后在练习中达到配额限制，你可能需要在不同的区域中创建另一个资源。
-
-1. 等待创建项目。
+1. 等待资源创建完成后，进入 Azure 门户中的该资源页。
+1. 在你的 Azure AI Foundry 资源页，选择“**转到 Azure AI Foundry 门户**”。
 
 ## 部署模型
 
@@ -61,47 +59,40 @@ lab:
 你的应用数据包括一组来自虚构旅行社 *Margie's Travel*PDF 格式旅行手册。 让我们将它们添加到项目。
 
 1. 在新的浏览器标签页中，从`https://github.com/MicrosoftLearning/mslearn-ai-studio/raw/main/data/brochures.zip`下载[手册的压缩存档](https://github.com/MicrosoftLearning/mslearn-ai-studio/raw/main/data/brochures.zip)，将其解压缩到本地文件系统上名为 **brochures** 的文件夹中。
-1. 在 Azure AI Foundry 门户的项目中，在左侧导航窗格“**我的资产**”下，选择“**数据 + 索引**”页。
-1. 选择“+ 新建数据”。****
-1. 在“添加数据”向导中，展开下拉菜单以选择“上传文件/文件夹”。********
-1. 选择“**上传文件夹**”，然后上传 **brochures** 文件夹。 等到列出文件夹中的所有文件。
-1. 选择“**下一步**”并将数据名称设置为 `brochures`。
-1. 等待文件夹上传完成，并注意它包含多个 .pdf 文件。
+1. 在 Azure AI Foundry 门户的项目中，在左侧导航窗格中，选择“**操场**”，然后选择“**试用聊天操场**”。
+1. 在操场的“**设置**”窗格中，展开“**添加数据**”部分，接着选择“**添加数据源**”。
+1. 在“**添加数据**”向导中，展开下拉菜单，选择“**上传文件**”。
+1. 使用以下设置，创建新的 Azure Blob 存储资源：
+    - **订阅**：Azure 订阅
+    - **资源组**：*与你的 Azure AI Foundry 资源相同的资源组*
+    - **存储帐户名称**：*存储帐户资源的有效名称*
+    - **区域**：*与你的 Azure AI Foundry 资源相同的区域*
+    - **性能**：标准
+    - **冗余**：LRS
+1. 创建资源，并等待部署完成。
+1. 返回到 Azure AI Foundry 选项卡，刷新 Azure Blob 存储资源列表，然后选择新创建帐户。
 
-## 为数据创建索引
+    > **注意**：如果收到警告提示 Azure OpenAI 需要你授权才能访问资源，请选择“**开启 CORS**”。
 
-现在，你已将数据源添加到项目中，可以使用它在 Azure AI 搜索资源中创建索引了。
+1. 使用以下设置，创建新的 Azure AI 搜索资源：
+    - **订阅**：Azure 订阅
+    - **资源组**：*与你的 Azure AI Foundry 资源相同的资源组*
+    - **服务名称**：*你的 Azure AI 搜索资源的有效名称*
+    - **区域**：*与你的 Azure AI Foundry 资源相同的区域*
+    - 定价层：基本
 
-1. 在 Azure AI Foundry 门户的项目中，在左侧导航窗格“**我的资产**”下，选择“**数据 + 索引**”页。
-1. 在“**索引**”选项卡中，使用以下设置添加新索引：
-    - **源位置**：
-        - **数据源**：Azure AI Foundry 中的数据
-            - 选择 brochures**** 数据源**
-    - **索引配置**：
-        - **选择 Azure AI 搜索服务**：*使用以下设置创建新的 Azure AI 搜索资源*：
-            - **订阅**：*Azure 订阅*
-            - **资源组**：*与 AI 中心相同的资源组*
-            - **服务名称**：*AI 搜索资源的有效名称*
-            - **位置**：*与 AI 中心相同的位置*
-            - 定价层：基本
-            
-            等待 AI 搜索资源创建完毕。 然后返回到 Azure AI Foundry，通过选择“**连接其他 Azure AI 搜索资源**”并将连接添加到刚刚创建的 AI 搜索资源来完成索引配置。
- 
-        - **矢量索引**：`brochures-index`
-        - **虚拟机**：自动选择
-    - 搜索设置****：
-        - 矢量设置****：向此搜索资源添加矢量搜索
-        - **Azure OpenAI 连接**：*为中心选择默认 Azure OpenAI 资源。*
-        - **嵌入模型**：text-embedding-ada-002
-        - **嵌入模型部署**：*部署* text-embedding-ada-002 *模型*
+1. 创建资源，并等待部署完成。
+1. 返回 Azure AI Foundry 选项卡，刷新 Azure AI 搜索资源列表，然后选择新创建的帐户。
+1. 给索引命名为 `brochures-index`。
+1. 启用“**向此搜索资源添加矢量搜索”**”选项，然后选择之前部署的嵌入模型。 选择**下一步**。
 
-1. 创建向量索引并等待索引过程完成，这可能需要一段时间，具体取决于订阅中的可用计算资源。
+   >**注意**：**添加数据**向导识别已部署的嵌入模型可能需要一些时间，因此如果无法启用矢量搜索选项，请取消向导，等待几分钟后再重试。
 
-    索引创建操作包含以下作业：
-
-    - 将文本标记破解、分块，然后将其嵌入到“手册”数据中。
-    - 创建 Azure AI 搜索索引。
-    - 注册索引资产。
+1. 从之前解压的**小册子**文件夹中上传所有 .pdf 文件，然后选择“**下一步**”。
+1. 在**数据管理**步骤中，选择搜索类型为“**混合（矢量+关键字）**”，并将区块大小设置为 **1024**。 选择**下一步**。
+1. 在**数据连接**步骤中，选择“**API 密钥**”作为身份验证类型。 选择**下一步**。
+1. 查看所有配置步骤，然后选择“**保存并关闭**”。
+1. 等待索引过程完成，这可能需要一段时间，具体取决于订阅中的可用计算资源。
 
     > **提示**：等待创建索引时，不妨查看下载的手册以熟悉其内容。
 
@@ -109,51 +100,40 @@ lab:
 
 在基于 RAG 的提示流中使用索引之前，我们先验证它是否可用于影响生成式 AI 响应。
 
-1. 在左侧导航窗格中，选择“**操场**”页，然后打开“**聊天**”操场。
-1. 在“聊天操场”页面的“设置”窗格中，确认已选择**gpt-4o**模型部署。 然后，在主聊天会话面板中提交提示“`Where can I stay in New York?`”
-1. 查看响应，该响应应该是来自模型的通用答案，没有来自索引的任何数据。
-1. 在“设置”窗格中，展开“**添加数据**”字段，然后添加 **brochures-index** 项目索引，并选择“**混合（矢量 + 关键字）**”搜索类型。
-
-   > **提示**：在某些情况下，新建的索引可能无法立即使用。 刷新浏览器通常很有帮助，但如果仍然遇到找不到索引的问题，可能需要等到索引被识别。
-
-1. 添加索引并重启聊天会话后，重新提交提示“`Where can I stay in New York?`”
+1. 在“聊天操场”页的“设置”窗格中，确认已选择**gpt-4o**模型部署。 然后，在主聊天会话面板中提交提示“`Where can I stay in New York?`”
 1. 查看响应，该响应应基于索引中的数据。
 
-<!-- DEPRECATED STEPS
+## 创建 RAG 客户端应用
 
-## Create a RAG client app with the Azure AI Foundry and Azure OpenAI SDKs
+拥有工作索引后，可以使用 Azure OpenAI SDK 在客户端应用程序中实现 RAG 模式。 我们将在一个简单的示例中探索代码实现。
 
-Now that you have a working index, you can use the Azure AI Foundry and Azure OpenAI SDKs to implement the RAG pattern in a client application. Let's explore the code to accomplish this in a simple example.
+> **提示**：你可以选择使用 Python 或 Microsoft C# 开发 RAG 解决方案。 按照所选语言的相应部分中的说明进行操作。
 
-> **Tip**: You can choose to develop your RAG solution using Python or Microsoft C#. Follow the instructions in the appropriate section for your chosen language.
+### 准备应用程序配置
 
-### Prepare the application configuration
+1. 返回到包含 Azure 门户的浏览器标签页（使 Azure AI Foundry 门户在现有选项卡中保持打开状态）。
+1. 使用页面顶部搜索栏右侧的 **[\>_]** 按钮在 Azure 门户中新建 Cloud Shell，选择订阅中不含存储的 ***PowerShell*** 环境。
 
-1. In the Azure AI Foundry portal, view the **Overview** page for your project.
-1. In the **Project details** area, note the **Project connection string**. You'll use this connection string to connect to your project in a client application.
-1. Return to the browser tab containing the Azure portal (keeping the Azure AI Foundry portal open in the existing tab).
-1. Use the **[\>_]** button to the right of the search bar at the top of the page to create a new Cloud Shell in the Azure portal, selecting a ***PowerShell*** environment with no storage in your subscription.
+    在 Azure 门户底部的窗格中，Cloud Shell 提供命令行接口。 可以调整此窗格的大小或最大化此窗格，以便更易于使用。
 
-    The cloud shell provides a command-line interface in a pane at the bottom of the Azure portal. You can resize or maximize this pane to make it easier to work in.
+    > **备注**：如果以前创建了使用 *Bash* 环境的 Cloud Shell，请将其切换到 ***PowerShell***。
 
-    > **Note**: If you have previously created a cloud shell that uses a *Bash* environment, switch it to ***PowerShell***.
+1. 在 Cloud Shell 工具栏的“**设置**”菜单中，选择“**转到经典版本**”（这是使用代码编辑器所必需的）。
 
-1. In the cloud shell toolbar, in the **Settings** menu, select **Go to Classic version** (this is required to use the code editor).
+    **<font color="red">在继续作之前，请确保已切换到 Cloud Shell 的经典版本。</font>**
 
-    **<font color="red">Ensure you've switched to the classic version of the cloud shell before continuing.</font>**
-
-1. In the cloud shell pane, enter the following commands to clone the GitHub repo containing the code files for this exercise (type the command, or copy it to the clipboard and then right-click in the command line and paste as plain text):
+1. 在 Cloud Shell 窗格中，输入以下命令以克隆包含此练习代码文件的 GitHub 存储库（键入命令，或将其复制到剪贴板后，在命令行中右键单击并粘贴为纯文本）：
 
     ```
     rm -r mslearn-ai-foundry -f
     git clone https://github.com/microsoftlearning/mslearn-ai-studio mslearn-ai-foundry
     ```
 
-    > **Tip**: As you paste commands into the cloudshell, the output may take up a large amount of the screen buffer. You can clear the screen by entering the `cls` command to make it easier to focus on each task.
+    > **提示**：将命令粘贴到 Cloudshell 中时，输出可能会占用大量屏幕缓冲区。 可以通过输入 `cls` 命令来清除屏幕，以便更轻松地专注于每项任务。
 
-1. After the repo has been cloned, navigate to the folder containing the chat application code files:
+1. 克隆存储库后，导航到包含聊天应用程序代码文件的文件夹：
 
-    > **Note**: Follow the steps for your chosen programming language.
+    > **备注**：按照所选编程语言的步骤操作。
 
     **Python**
 
@@ -167,26 +147,24 @@ Now that you have a working index, you can use the Azure AI Foundry and Azure Op
    cd mslearn-ai-foundry/labfiles/rag-app/c-sharp
     ```
 
-1. In the cloud shell command-line pane, enter the following command to install the libraries you'll use:
+1. 在 Cloud Shell 命令行窗格中，输入以下命令以安装 OpenAI SDK 库：
 
     **Python**
 
     ```
    python -m venv labenv
    ./labenv/bin/Activate.ps1
-   pip install python-dotenv azure-ai-projects azure-identity openai
+   pip install -r requirements.txt openai
     ```
 
     **C#**
 
     ```
-   dotnet add package Azure.Identity
-   dotnet add package Azure.AI.Projects --prerelease
-   dotnet add package Azure.AI.OpenAI --prerelease
+   dotnet add package Azure.AI.OpenAI
     ```
     
 
-1. Enter the following command to edit the configuration file that has been provided:
+1. 输入以下命令以编辑已提供的配置文件：
 
     **Python**
 
@@ -200,18 +178,21 @@ Now that you have a working index, you can use the Azure AI Foundry and Azure Op
    code appsettings.json
     ```
 
-    The file is opened in a code editor.
+    该文件已在代码编辑器中打开。
 
-1. In the code file, replace the following placeholders: 
-    - **your_project_connection_string**: Replace with the connection string for your project (copied from the project **Overview** page in the Azure AI Foundry portal).
-    - **your_gpt_model_deployment** Replace with the name you assigned to your **gpt-4o** model deployment.
-    - **your_embedding_model_deployment**: Replace with the name you assigned to your **text-embedding-ada-002** model deployment.
-    - **your_index**: Replace with your index name (which should be `brochures-index`).
-1. After you've replaced the placeholders, in the code editor, use the **CTRL+S** command or **Right-click > Save** to save your changes and then use the **CTRL+Q** command or **Right-click > Quit** to close the code editor while keeping the cloud shell command line open.
+1. 在代码文件中，替换以下占位符： 
+    - **your_openai_endpoint**：Azure AI Foundry 门户中项目“**概述**”页的“Open AI 终结点”（请务必选择“**Azure OpenAI**”功能选项卡，而不是 Azure AI 推理或 Azure AI 服务功能）。
+    - ** your_openai_api_key** Azure AI Foundry 门户中项目“**概述**”页的“打开 AI API 密钥”（请务必选择“**Azure OpenAI**”功能选项卡，而不是 Azure AI 推理或 Azure AI 服务功能）。
+    - **your_chat_model**：从 Azure AI Foundry 门户中“**模型 + 终结点**”页（默认名称为`gpt-4o`）分配给 **GPT-4o** 模型部署的名称。
+    - **your_embedding_model**：从 Azure AI Foundry 门户中“**模型 + 终结点**”页（默认名称为`text-embedding-ada-002`）分配给 **text-embedding-ada-002** 模型部署的名称。
+    - **your_search_endpoint**：Azure AI 搜索资源的 URL。 可以在 Azure AI Foundry 门户的**管理中心**中查找此信息。
+    - **your_search_api_key**：Azure AI 搜索资源的 API 密钥。 可以在 Azure AI Foundry 门户的**管理中心**中查找此信息。
+    - **your_index**：替换为 Azure AI Foundry 门户中项目的“**数据 + 索引**”页中的索引名称（应该为`brochures-index`）。
+1. 替换占位符后，在代码编辑器中使用 “CTRL+S”**** 命令或“ 右键单击 > 保存”**** 保存更改，然后使用 “CTRL+Q”**** 命令或 “右键单击 > 退出”**** 关闭代码编辑器，同时保持 Cloud Shell 命令行打开。
 
-### Explore code to implement the RAG pattern
+### 探索实现 RAG 模式的代码
 
-1. Enter the following command to edit the code file that has been provided:
+1. 输入以下命令以编辑已提供的代码文件：
 
     **Python**
 
@@ -225,24 +206,22 @@ Now that you have a working index, you can use the Azure AI Foundry and Azure Op
    code Program.cs
     ```
 
-1. Review the code in the file, noting that it:
-    - Uses the Azure AI Foundry SDK to connect to your project (using the project connection string)
-    - Creates an authenticated Azure OpenAI client from your project connection.
-    - Retrieves the default Azure AI Search connection from your project so it can determine the endpoint and key for your Azure AI Search service.
-    - Creates a suitable system message.
-    - Submits a prompt (including the system and a user message based on the user input) to the Azure OpenAI client, adding:
-        - Connection details for the Azure AI Search index to be queried.
-        - Details of the embedding model to be used to vectorize the query\*.
-    - Displays the response from the grounded prompt.
-    - Adds the response to the chat history.
+1. 查看文件中的代码，并注意以下几点：
+    - 使用终结点、密钥和聊天模型创建 Azure OpenAI 客户端。
+    - 为旅行相关的聊天解决方案创建合适的系统消息。
+    - 将提示（包括系统消息和基于用户输入的用户消息）提交给 Azure OpenAI 客户端，并添加：
+        - 要查询的 Azure AI 搜索索引的连接详细信息。
+        - 要用于矢量化查询\*的嵌入模型的详细信息。
+    - 显示依据提示生成的响应。
+    - 将响应添加到聊天历史记录。
 
-    \* *The query for the search index is based on the prompt, and is used to find relevant text in the indexed documents. You can use a keyword-based search that submits the query as text, but using a vector-based search can be more efficient - hence the use of an embedding model to vectorize the query text before submitting it.*
+    \**搜索索引的查询基于提示，用于查找索引文档中的相关文本。可以使用以文本形式提交查询的基于关键字的搜索，但使用基于矢量的搜索可以更高效 - 因此，使用嵌入模型在提交查询文本之前对查询文本进行矢量化。*
 
-1. Use the **CTRL+Q** command to close the code editor without saving any changes, while keeping the cloud shell command line open.
+1. 使用 **Ctrl+Q** 命令关闭代码编辑器，同时保持 cloud shell 命令行打开。
 
-### Run the chat application
+### 运行聊天应用程序
 
-1. In the cloud shell command-line pane, enter the following command to run the app:
+1. 在 Cloud Shell 命令行窗格中，输入以下命令以运行应用：
 
     **Python**
 
@@ -256,15 +235,13 @@ Now that you have a working index, you can use the Azure AI Foundry and Azure Op
    dotnet run
     ```
 
-1. When prompted, enter a question, such as `Where should I go on vacation to see architecture?` and review the response from your generative AI model.
+1. 出现提示时，输入问题，例如`Where should I go on vacation to see architecture?`并查看生成式 AI 模型的回复。
 
-    Note that the response includes source references to indicate the indexed data in which the answer was found.
+    请注意，响应包含源引用，用于指示找到答案的索引数据。
 
-1. Try a follow-up question, for example `Where can I stay there?`
+1. 尝试提出跟进问题，例如`Where can I stay there?`
 
-1. When you're finished, enter `quit` to exit the program. Then close the cloud shell pane.
-
--->
+1. 完成后，输入`quit`退出程序。 然后关闭 Cloud Shell 窗格。
 
 ## 清理
 
