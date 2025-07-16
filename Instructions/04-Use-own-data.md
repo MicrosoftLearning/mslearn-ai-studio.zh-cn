@@ -8,36 +8,31 @@ lab:
 
 检索增强生成 (RAG) 是一种用于生成应用程序的技术，这些应用程序将来自自定义数据源的数据集成到生成式 AI 模型的提示中。 RAG 是开发生成式 AI 应用（基于聊天的应用程序，使用语言模型来解释输入并生成适当的响应）的常用模式。
 
-在本练习中，你将使用 Azure AI Foundry 门户以及 Azure AI Foundry 和 Azure OpenAI SDK 将自定义数据集成到生成式 AI 应用中。
+在本练习中，你将使用 Azure AI Foundry 将自定义数据集成到生成式 AI 解决方案中。
 
 本练习大约需要 **45** 分钟。
 
-> **备注**：本练习基于预发布 SDK，可能会有更改。 必要时，我们使用了特定版本的包；这可能没有反映最新的可用版本。 可能会遇到一些意想不到的行为、警告或错误。
+> **备注**：本练习基于预发布的服务，可能会有更改。
 
-## 创建 Azure AI Foundry 项目
+## Azure AI Foundry 中心和项目
 
-首先，创建一个 Azure AI Foundry 项目及其所需的服务资源，以便使用自己的数据（包括 Azure AI 搜索资源）提供支持。
+我们将在本练习中使用的 Azure AI Foundry 功能，需要基于 Azure AI Foundry *中心*资源的项目。
 
-1. 在 Web 浏览器中打开 [Azure AI Foundry 门户](https://ai.azure.com)，网址为：`https://ai.azure.com`，然后使用 Azure 凭据登录。 关闭首次登录时打开的任何使用技巧或快速入门窗格，如有必要，请使用左上角的 **Azure AI Foundry** 徽标导航到主页，如下图所示：
+1. 在 Web 浏览器中打开 [Azure AI Foundry 门户](https://ai.azure.com)，网址为：`https://ai.azure.com`，然后使用 Azure 凭据登录。 关闭首次登录时打开的任何使用技巧或快速入门窗格，如有必要，使用左上角的 **Azure AI Foundry** 徽标导航到主页，类似下图所示（若已打开**帮助**面板，请关闭）：
 
     ![Azure AI Foundry 门户的屏幕截图。](./media/ai-foundry-home.png)
 
-1. 在主页中，选择“**+ 创建项目**”。
-1. 在**创建项目**向导中，输入有效的项目名称，如果出现建议使用现有中心的提示，请选择新建中心的选项。 然后查看将自动创建的 Azure 资源以支持中心和项目。
-1. 选择“**自定义**”并为中心指定以下设置：
-    - **中心名**：*有效的中心名*
+1. 在浏览器中，导航到 `https://ai.azure.com/managementCenter/allResources` 并选择“**创建**”。 然后选择创建新的 **AI 中心资源**的选项。
+1. 在**创建项目**向导中，输入有效的项目名称，并选择创建新中心。 然后，使用**重命名中心**链接为你的新中心指定一个有效名称，展开“**高级选项**”，并为项目配置以下设置：
     - **订阅**：Azure 订阅
     - **资源组**：*创建或选择资源组*
-    - **位置**：选择**帮助我选择**，然后在“位置帮助程序”窗口中选择**gpt-4o**，并使用推荐的区域\*
-    - **连接 Azure AI 服务或 Azure OpenAI**：*新建 AI 服务资源*
-    - **连接 Azure AI 搜索**：*使用唯一名称创建新的 Azure AI 搜索资源*
+    - **区域**：美国东部 2 或瑞典中部（*如果稍后在练习中超出配额限制，可能需要在其他区域创建新的资源。*）
 
-    > \* Azure OpenAI 资源受区域模型配额约束。 如果稍后在练习中达到配额限制，你可能需要在不同的区域中创建另一个资源。
+    > **注意**：如果你使用的 Azure 订阅启用了用于限制资源名称的策略，可能需要点击“**创建新项目**”对话框底部的链接，转到 Azure 门户以创建该中心。
 
-1. 选择“**下一步**”查看配置。 然后，选择“**创建**”并等待该进程完成。
-1. 创建项目后，关闭显示的所有使用技巧，并查看 Azure AI Foundry 门户中的项目页面，如下图所示：
+    > **提示**：如果“**创建**”按钮仍然禁用，请确认你已将中心名称更改为一个唯一的字母和数字组合。
 
-    ![Azure AI Foundry 门户中 Azure AI 项目详细信息的屏幕截图。](./media/ai-foundry-project.png)
+1. 等待项目创建，然后导航到项目。
 
 ## 部署模型
 
@@ -84,7 +79,15 @@ lab:
         - **数据源**：Azure AI Foundry 中的数据
             - 选择 brochures**** 数据源**
     - **索引配置**：
-        - 选择 Azure AI 搜索服务****：选择到 Azure AI 搜索资源的 AzureAISearch**** 连接**
+        - **选择 Azure AI 搜索服务**：*使用以下设置创建新的 Azure AI 搜索资源*：
+            - **订阅**：*Azure 订阅*
+            - **资源组**：*与 AI 中心相同的资源组*
+            - **服务名称**：*AI 搜索资源的有效名称*
+            - **位置**：*与 AI 中心相同的位置*
+            - 定价层：基本
+            
+            等待 AI 搜索资源创建完毕。 然后返回到 Azure AI Foundry，通过选择“**连接其他 Azure AI 搜索资源**”并将连接添加到刚刚创建的 AI 搜索资源来完成索引配置。
+ 
         - **矢量索引**：`brochures-index`
         - **虚拟机**：自动选择
     - 搜索设置****：
@@ -117,20 +120,15 @@ lab:
 1. 添加索引并重启聊天会话后，重新提交提示“`Where can I stay in New York?`”
 1. 查看响应，该响应应基于索引中的数据。
 
-## 使用 Azure AI Foundry 和 Azure OpenAI SDK 创建 RAG 客户端应用程序
+## 创建 RAG 客户端应用
 
-拥有工作索引后，可以使用 Azure AI Foundry 和 Azure OpenAI SDK 在客户端应用程序中实现 RAG 模式。 我们将在一个简单的示例中探索代码实现。
+拥有工作索引后，可以使用 Azure OpenAI SDK 在客户端应用程序中实现 RAG 模式。 我们将在一个简单的示例中探索代码实现。
 
 > **提示**：你可以选择使用 Python 或 Microsoft C# 开发 RAG 解决方案。 按照所选语言的相应部分中的说明进行操作。
 
 ### 准备应用程序配置
 
-1. 在 Azure AI Foundry 门户中，查看项目的“**概述**”页。
-1. 在“**项目详细信息**”区域中，记下**项目连接字符串**。 你将使用此连接字符串连接到客户端应用程序中的项目。
-1. 打开新的浏览器选项卡（使 Azure AI Foundry 门户在现有选项卡中保持打开状态）。 然后在新选项卡中，浏览到 [Azure 门户](https://portal.azure.com)，网址为：`https://portal.azure.com`；如果出现提示，请使用 Azure 凭据登录。
-
-    关闭任何欢迎通知以查看 Azure 门户主页。
-
+1. 返回到包含 Azure 门户的浏览器标签页（使 Azure AI Foundry 门户在现有选项卡中保持打开状态）。
 1. 使用页面顶部搜索栏右侧的 **[\>_]** 按钮在 Azure 门户中新建 Cloud Shell，选择订阅中不含存储的 ***PowerShell*** 环境。
 
     在 Azure 门户底部的窗格中，Cloud Shell 提供命令行接口。 可以调整此窗格的大小或最大化此窗格，以便更易于使用。
@@ -166,22 +164,20 @@ lab:
    cd mslearn-ai-foundry/labfiles/rag-app/c-sharp
     ```
 
-1. 在 Cloud Shell 命令行窗格中，输入以下命令以安装将要使用的库：
+1. 在 Cloud Shell 命令行窗格中，输入以下命令以安装 OpenAI SDK 库：
 
     **Python**
 
     ```
    python -m venv labenv
    ./labenv/bin/Activate.ps1
-   pip install python-dotenv azure-ai-projects azure-identity openai
+   pip install -r requirements.txt openai
     ```
 
     **C#**
 
     ```
-   dotnet add package Azure.Identity
-   dotnet add package Azure.AI.Projects --prerelease
-   dotnet add package Azure.AI.OpenAI --prerelease
+   dotnet add package Azure.AI.OpenAI
     ```
     
 
@@ -202,10 +198,13 @@ lab:
     该文件已在代码编辑器中打开。
 
 1. 在代码文件中，替换以下占位符： 
-    - **your_project_connection_string**：替换为项目的连接字符串（从 Azure AI Foundry 门户中的项目“**概述**”页复制）
-    - **your_gpt_model_deployment** 替换为分配给 **gpt-4o** 模型部署的名称。
-    - **your_embedding_model_deployment**：替换为分配给 **text-embedding-ada-002** 模型部署的名称。
-    - **your_index**：替换为索引名称（应为`brochures-index`）。
+    - **your_openai_endpoint**：Azure AI Foundry 门户中项目“**概述**”页的“Open AI 终结点”（请务必选择“**Azure OpenAI**”功能选项卡，而不是 Azure AI 推理或 Azure AI 服务功能）。
+    - ** your_openai_api_key** Azure AI Foundry 门户中项目“**概述**”页的“打开 AI API 密钥”（请务必选择“**Azure OpenAI**”功能选项卡，而不是 Azure AI 推理或 Azure AI 服务功能）。
+    - **your_chat_model**：从 Azure AI Foundry 门户中“**模型 + 终结点**”页（默认名称为`gpt-4o`）分配给 **GPT-4o** 模型部署的名称。
+    - **your_embedding_model**：从 Azure AI Foundry 门户中“**模型 + 终结点**”页（默认名称为`text-embedding-ada-002`）分配给 **text-embedding-ada-002** 模型部署的名称。
+    - **your_search_endpoint**：Azure AI 搜索资源的 URL。 可以在 Azure AI Foundry 门户的**管理中心**中查找此信息。
+    - **your_search_api_key**：Azure AI 搜索资源的 API 密钥。 可以在 Azure AI Foundry 门户的**管理中心**中查找此信息。
+    - **your_index**：替换为 Azure AI Foundry 门户中项目的“**数据 + 索引**”页中的索引名称（应该为`brochures-index`）。
 1. 替换占位符后，在代码编辑器中使用 “CTRL+S”**** 命令或“ 右键单击 > 保存”**** 保存更改，然后使用 “CTRL+Q”**** 命令或 “右键单击 > 退出”**** 关闭代码编辑器，同时保持 Cloud Shell 命令行打开。
 
 ### 探索实现 RAG 模式的代码
@@ -225,10 +224,8 @@ lab:
     ```
 
 1. 查看文件中的代码，并注意以下几点：
-    - 使用 Azure AI Foundry SDK 连接到项目（使用项目连接字符串）
-    - 通过项目连接创建经过身份验证的 Azure OpenAI 客户端。
-    - 从项目检索默认的 Azure AI 搜索连接，帮助确定 Azure AI 搜索服务的终结点和密钥。
-    - 创建合适的系统消息。
+    - 使用终结点、密钥和聊天模型创建 Azure OpenAI 客户端。
+    - 为旅行相关的聊天解决方案创建合适的系统消息。
     - 将提示（包括系统消息和基于用户输入的用户消息）提交给 Azure OpenAI 客户端，并添加：
         - 要查询的 Azure AI 搜索索引的连接详细信息。
         - 要用于矢量化查询\*的嵌入模型的详细信息。
