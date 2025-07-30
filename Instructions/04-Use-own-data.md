@@ -22,7 +22,7 @@ lab:
 
     ![Azure AI Foundry 门户的屏幕截图。](./media/ai-foundry-home.png)
 
-1. 在浏览器中，导航到 `https://ai.azure.com/managementCenter/allResources` 并选择“**创建**”。 然后选择创建新的 **AI 中心资源**的选项。
+1. 在浏览器中，浏览到 `https://ai.azure.com/managementCenter/allResources`，并选择“新建”****。 然后选择创建新的 **AI 中心资源**的选项。
 1. 在**创建项目**向导中，输入有效的项目名称，并选择创建新中心。 然后，使用**重命名中心**链接为你的新中心指定一个有效名称，展开“**高级选项**”，并为项目配置以下设置：
     - **订阅**：Azure 订阅
     - **资源组**：*创建或选择资源组*
@@ -198,8 +198,8 @@ lab:
     该文件已在代码编辑器中打开。
 
 1. 在代码文件中，替换以下占位符： 
-    - **your_openai_endpoint**：Azure AI Foundry 门户中项目“**概述**”页的“Open AI 终结点”（请务必选择“**Azure OpenAI**”功能选项卡，而不是 Azure AI 推理或 Azure AI 服务功能）。
-    - ** your_openai_api_key** Azure AI Foundry 门户中项目“**概述**”页的“打开 AI API 密钥”（请务必选择“**Azure OpenAI**”功能选项卡，而不是 Azure AI 推理或 Azure AI 服务功能）。
+    - your_openai_endpoint****：Azure AI Foundry 门户中项目“概述”页的“Open AI 终结点”（请务必选择“Azure OpenAI”功能选项卡，而不是 Azure AI 推理或 Azure AI 服务功能）。********
+    - your_openai_api_key：Azure AI Foundry 门户中项目“概述”页的“Open AI API 密钥”（请务必选择“Azure OpenAI”功能选项卡，而不是 Azure AI 推理或 Azure AI 服务功能）。************
     - **your_chat_model**：从 Azure AI Foundry 门户中“**模型 + 终结点**”页（默认名称为`gpt-4o`）分配给 **GPT-4o** 模型部署的名称。
     - **your_embedding_model**：从 Azure AI Foundry 门户中“**模型 + 终结点**”页（默认名称为`text-embedding-ada-002`）分配给 **text-embedding-ada-002** 模型部署的名称。
     - **your_search_endpoint**：Azure AI 搜索资源的 URL。 可以在 Azure AI Foundry 门户的**管理中心**中查找此信息。
@@ -251,6 +251,8 @@ lab:
     ```
    dotnet run
     ```
+
+    > **提示**：如果由于未安装 .NET 版本 9.0 而发生编译错误，请使用 `dotnet --version` 命令确定环境中安装的 .NET 版本，然后编辑代码文件夹中的 rag_app.csproj 文件，相应地更新 TargetFramework 设置。********
 
 1. 出现提示时，输入问题，例如`Where should I go on vacation to see architecture?`并查看生成式 AI 模型的回复。
 

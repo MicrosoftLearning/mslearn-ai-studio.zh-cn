@@ -34,7 +34,7 @@ Azure AI Foundry 模型目录充当中央存储库，在其中可浏览和使用
     ![gpt-4o 模型基准页的屏幕截图。](./media/gpt4-benchmarks.png)
 
 1. 使用 **gpt-4o** 页标题旁边的后退箭头（**&larr;**），返回到模型目录。
-1. 搜索 `Phi-3.5-mini-instruct` 并查看 **Phi-3.5-mini-instruct** 模型的详细信息和基准。
+1. 搜索 `Phi-4-mini-instruct` 并查看 Phi-4-mini-instruct**** 模型的详细信息和基准。
 
 ## 比较模型
 
@@ -47,16 +47,14 @@ Azure AI Foundry 模型目录充当中央存储库，在其中可浏览和使用
 
 1. 在“**模型比较**”窗格中，请注意，可以选择常用任务，例如，*问题解答*，以便自动为特定任务选择常用模型。
 1. 使用“**清除所有模型**” (&#128465;) 图标，移除所有预先选择的模型。
-1. 使用 **+ 模型比较**按钮，将 **gpt-4o** 模型添加到列表中。 然后使用同一按钮将 **Phi-3.5-mini-instruct** 模型添加到列表中。
+1. 使用 **+ 模型比较**按钮，将 **gpt-4o** 模型添加到列表中。 然后使用同一按钮将 Phi-4-mini-instruct**** 模型添加到列表中。
 1. 查看图表，该图表根据“**质量索引**”（指示模型质量的标准化分数）和“**成本**”比较模型。 可以通过将鼠标悬停在图表中表示它的点上来查看模型的特定值。
 
-    ![gpt-4o 和 Phi-3.5-mini-instruct 的模型比较图表的屏幕截图。](./media/comparison-chart.png)
+    ![gpt-4o 和 Phi-4-mini-instruct 的模型比较图表的屏幕截图。](./media/comparison-chart.png)
 
 1. 在“**X 轴**”下拉菜单的“**质量**”下，选择以下指标并观察每个生成的图表，然后再切换到下一个图表：
     - 准确性
-    - 一致性
-    - 流畅度
-    - 相关性
+    - 质量指数
 
     根据基准测试，gpt-4o 模型看起来提供最佳的整体性能，但成本更高。
 
@@ -103,27 +101,25 @@ Azure AI Foundry 模型目录充当中央存储库，在其中可浏览和使用
 
 ## 部署其他模型
 
-创建项目时，选中的 **gpt-4o** 模型已自动部署。 我们来部署你也考虑过的 ***Phi-3.5-mini-instruct** 模型。
+创建项目时，选中的 **gpt-4o** 模型已自动部署。 现在来部署你同样考虑过的 *Phi-4-mini-instruct**** 模型。
 
 1. 在左侧导航栏中的“**我的资产**”部分，选择“**模型 + 终结点**”页。
-1. 在“**模型部署**”选项卡中的“**+ 部署模型**”下拉列表中，选择“**部署基础模型**”。 然后搜索 `Phi-3.5-mini-instruct` 并确认选择。
+1. 在“**模型部署**”选项卡中的“**+ 部署模型**”下拉列表中，选择“**部署基础模型**”。 然后搜索 `Phi-4-mini-instruct` 并确认选择。
 1. 同意模型许可证。
-1. 使用以下设置，部署**Phi-3.5-mini-instruct**模型：
-    - **部署名称**：*模型部署的有效名称*
+1. 使用以下设置部署 Phi-4-mini-instruct**** 模型：
+    - **部署名**：*有效的模型部署名*
     - **部署类型**：全局标准
     - **部署详细信息**：*使用默认设置*
 
 1. 等待部署完成。
 
-## 使用 *Phi-3.5* 模型的聊天
+## 与 Phi-4** 模型聊天
 
 现在，让我们在操场中与新模型聊天。
 
 1. 在导航栏中，选择“**操场**”。 然后选择“**聊天操场**”。
-1. 在聊天操场的“**设置**”窗格中，确保已选择 **Phi-3.5-mini-instruction** 模型，并在“**提供模型说明和上下文**”字段中，将系统提示设置为 `You are an AI assistant that helps solve problems.`（与测试 gpt-4o 模型使用的系统提示相同）。
-1. 选择“**应用更改**”以更新系统提示。
-1. 请确保在重复之前用于测试 gpt-4 模型的相同提示之前启动新的聊天会话。
-1. 在查询窗口中输入以下查询
+1. 在“聊天”操场的“设置”窗格中，确保已选中“Phi-4-mini-instruct”模型，并在聊天框中提供第一行作为 `System message: You are an AI assistant that helps solve problems.`（用于测试 gpt-4o 模型的同一系统提示，但由于没有系统消息设置，我们在第一个聊天中提供它以便模型理解上下文）。********
+1. 在聊天窗口中新起一行（系统消息下方），输入以下查询
 
     ```
    I have a fox, a chicken, and a bag of grain that I need to take over a river in a boat. I can only take one thing at a time. If I leave the chicken and the grain unattended, the chicken will eat the grain. If I leave the fox and the chicken unattended, the fox will eat the chicken. How can I get all three things across the river without anything being eaten?
