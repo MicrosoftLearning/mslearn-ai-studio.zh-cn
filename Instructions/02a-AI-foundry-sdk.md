@@ -6,11 +6,17 @@ lab:
 
 # 创建生成式 AI 聊天应用
 
-在本练习中，将使用 Azure AI Foundry SDK 创建连接到项目并与语言模型聊天的简单聊天应用。
+在本练习中，你将使用 Azure AI Foundry Python SDK 创建一个简单的聊天应用程序，该应用程序会连接到某个项目并与语言模型进行聊天。
+
+> **注意**：本练习基于预发布版 SDK 软件，未来可能会有所变动。 必要时，我们使用了特定版本的包；这可能没有反映最新的可用版本。 可能会遇到一些意想不到的行为、警告或错误。
+
+尽管本练习基于 Azure AI Foundry Python SDK，但你也可以使用多种语言特定的 SDK 开发 AI 聊天应用程序，包括：
+
+- [适用于 Python 的 Azure AI 项目](https://pypi.org/project/azure-ai-projects)
+- [适用于 Microsoft .NET 的 Azure AI 项目](https://www.nuget.org/packages/Azure.AI.Projects)
+- [适用于 JavaScript 的 Azure AI 项目](https://www.npmjs.com/package/@azure/ai-projects)
 
 此练习大约需要 **40** 分钟。
-
-> **备注**：本练习基于预发布 SDK，可能会有更改。 必要时，我们使用了特定版本的包；这可能没有反映最新的可用版本。 可能会遇到一些意想不到的行为、警告或错误。
 
 ## 在 Azure AI Foundry 项目中部署模型
 
@@ -31,25 +37,27 @@ lab:
 
     > \* 某些 Azure AI 资源受区域模型配额约束。 如果稍后在练习中达到配额限制，你可能需要在不同的区域中创建另一个资源。
 
-1. 选择“**创建**”并等待项目（包括所选的 gpt-4 模型部署）创建。
-1. 创建项目后，将自动打开聊天操场。
+1. 选择“**创建**”并等待创建项目。 如果出现提示，请使用“全局标准”部署类型部署 gpt-4o 模型，并自定义部署详细信息，将“每分钟标记数速率限制”设置为 50,000（如果小于 50,000，则设置为最大可用值）********。
+
+    > **注意**：减少 TPM 有助于避免过度使用正在使用的订阅中可用的配额。 50,000 TPM 足以应对本练习所需的数据处理量。 如果可用配额低于上述 50,000 TPM，你仍然可完成本练习，但如果超过速率限制，可能会出现错误。
+
+1. 创建项目后，聊天操场将自动打开，以便可以测试模型：
 1. 在“**设置**”窗格中，记下模型部署的名称；应为 **gpt-4o**。 可以通过在“**模型和终结点**”页中查看部署来确认这一点（只需在左侧导航窗格中打开该页）。
 1. 在左侧导航窗格中，选择“**概述**”以查看项目的主页；如下所示：
-
-    > **备注**：如果显示“*权限不足*”*错误，请使用“**修复我**”按钮解决此问题。
 
     ![Azure AI Foundry 项目概述页面的屏幕截图。](./media/ai-foundry-project.png)
 
 ## 创建客户端应用程序以与模型聊天
 
-部署模型后，可以使用 Azure AI Foundry 和 Azure AI 模型推理 SDK 开发与之聊天的应用程序。
-
-> **提示**：可以选择使用 Python 或 Microsoft C# 开发解决方案。 按照所选语言的相应部分中的说明进行操作。
+部署模型后，可以使用 Azure AI Foundry 和 Azure OpenAI SDK 开发与之聊天的应用程序。
 
 ### 准备应用程序配置
 
 1. 在 Azure AI Foundry 门户中，查看项目的“**概述**”页。
-1. 在“**项目详细信息**”区域中，记下 **Azure AI Foundry 项目终结点**。 你将使用此终结点连接到客户端应用程序中的项目。
+1. 在“终结点和密钥”区域，确保已选择 Azure AI Foundry 库，并查看“Azure AI Foundry 项目终结点”************。 你将使用此终结点连接到客户端应用程序中的项目和模型。
+
+    > **注意**：你也可以使用 Azure OpenAI 终结点！
+
 1. 打开新的浏览器选项卡（使 Azure AI Foundry 门户在现有选项卡中保持打开状态）。 然后在新选项卡中，浏览到 [Azure 门户](https://portal.azure.com)，网址为：`https://portal.azure.com`；如果出现提示，请使用 Azure 凭据登录。
 
     关闭任何欢迎通知以查看 Azure 门户主页。
@@ -73,58 +81,31 @@ lab:
 
     > **提示**：在 Cloudshell 中时输入命令时，输出可能会占用大量屏幕缓冲区。 可以通过输入 `cls` 命令来清除屏幕，以便更轻松地专注于每项任务。
 
-1. 克隆存储库后，导航到包含聊天应用程序代码文件的文件夹：
-
-    根据所选编程语言，使用以下命令。
-
-    **Python**
+1. 克隆存储库后，导航到包含聊天应用程序代码文件的文件夹进行查看：
 
     ```
    cd mslearn-ai-foundry/labfiles/chat-app/python
+   ls -a -l
     ```
 
-    **C#**
-
-    ```
-   cd mslearn-ai-foundry/labfiles/chat-app/c-sharp
-    ```
+    该文件夹包含一个代码文件、一个用于应用程序设置的配置文件，以及一个定义项目运行时环境和所需依赖包的文件。
 
 1. 在 Cloud Shell 命令行窗格中，输入以下命令以安装将要使用的库：
-
-    **Python**
 
     ```
    python -m venv labenv
    ./labenv/bin/Activate.ps1
-   pip install python-dotenv azure-identity azure-ai-projects azure-ai-inference
+   pip install -r requirements.txt azure-identity azure-ai-projects openai
     ```
-
-    **C#**
-
-    ```
-   dotnet add package Azure.Identity
-   dotnet add package Azure.AI.Projects --version 1.0.0-beta.9
-   dotnet add package Azure.AI.Inference --version 1.0.0-beta.5
-    ```
-    
-
 1. 输入以下命令以编辑已提供的配置文件：
-
-    **Python**
 
     ```
    code .env
     ```
 
-    **C#**
-
-    ```
-   code appsettings.json
-    ```
-
     该文件已在代码编辑器中打开。
 
-1. 在代码文件中，将 **your_project_endpoint** 占位符替换为项目的终结点（从 Azure AI Foundry 门户中的项目“**概述**”页复制而来），并将 **your_model_deployment** 占位符替换为 gpt-4 模型部署的名称。
+1. 在代码文件中，将“your_project_endpoint”占位符替换为项目的 Azure AI Foundry 项目终结点（从 Azure AI Foundry 门户中的项目“概述”页复制而来），并将“your_model_deployment”占位符替换为 gpt-4 模型部署的名称****************。
 1. 替换占位符后，在代码编辑器中使用 **CTRL+S** 命令或 ** 右键单击 > 保存** 保存更改，然后使用 **CTRL+Q** 命令或 ** 右键单击 > 退出** 关闭代码编辑器，同时保持 Cloud Shell 命令行打开。
 
 ### 写入代码以连接到项目并与模型聊天
@@ -133,137 +114,62 @@ lab:
 
 1. 输入以下命令以编辑已提供的代码文件：
 
-    **Python**
-
     ```
    code chat-app.py
     ```
 
-    **C#**
-
-    ```
-   code Program.cs
-    ```
-
 1. 在代码文件中，请注意在文件顶部添加的现有语句，以导入必要的 SDK 命名空间。 然后，查找注释“**添加引用**”，添加以下代码以引用之前安装的库中的命名空间：
-
-    **Python**
 
     ```python
    # Add references
-   from dotenv import load_dotenv
    from azure.identity import DefaultAzureCredential
    from azure.ai.projects import AIProjectClient
-   from azure.ai.inference.models import SystemMessage, UserMessage, AssistantMessage
-    ```
-
-    **C#**
-
-    ```csharp
-   // Add references
-   using Azure.Identity;
-   using Azure.AI.Projects;
-   using Azure.AI.Inference;
+   from openai import AzureOpenAI
     ```
 
 1. 在 **main** 函数的注释“**获取配置设置**”下，请注意，代码将加载配置文件中定义的项目连接字符串和模型部署名称值。
-1. 查找注释**初始化项目客户端**，然后添加以下代码，使用当前登录所使用的 Azure 凭据连接到 Azure AI Foundry 项目：
+1. 找到注释“初始化项目客户端”，添加以下代码，以连接到 Azure AI Foundry 项目****：
 
     > **提示**：注意保持代码的正确缩进级别。
 
-    **Python**
-
     ```python
    # Initialize the project client
-   projectClient = AIProjectClient(            
+   project_client = AIProjectClient(            
             credential=DefaultAzureCredential(
                 exclude_environment_credential=True,
                 exclude_managed_identity_credential=True
             ),
-            endpoint=project_connection,
+            endpoint=project_endpoint,
         )
-    ```
-
-    **C#**
-
-    ```csharp
-   // Initialize the project client
-   DefaultAzureCredentialOptions options = new()
-       { ExcludeEnvironmentCredential = true,
-        ExcludeManagedIdentityCredential = true };
-   var projectClient = new AIProjectClient(
-        new Uri(project_connection),
-        new DefaultAzureCredential(options));
     ```
 
 1. 查找注释“**获取聊天客户端**”，添加以下代码，以创建与模型聊天的客户端对象：
 
-    **Python**
-
     ```python
    # Get a chat client
-   chat = projectClient.inference.get_chat_completions_client()
+   openai_client = project_client.inference.get_azure_openai_client(api_version="2024-10-21")
     ```
-
-    **C#**
-
-    ```csharp
-   // Get a chat client
-   ChatCompletionsClient chat = projectClient.GetChatCompletionsClient();
-    ```
-
-    > **备注**：此代码使用 Azure AI Foundry 项目客户端创建与项目关联的默认 Azure AI 模型推理服务终结点的安全连接。 还可以使用 Azure AI 模型推理 SDK *直接*连接到终结点，方法是：对于 Azure AI Foundry 门户中的或是 Azure 门户的相应 Azure AI 服务资源页面中的服务连接，指定显示的终结点 URI，并使用身份验证密钥或 Entra 凭据令牌。 有关连接到 Azure AI 模型推理服务的详细信息，请参阅 [Azure AI 模型推理 API](https://learn.microsoft.com/azure/machine-learning/reference-model-inference-api)。
 
 1. 查找注释“**使用系统消息初始化提示符**”，并添加以下代码以使用系统提示初始化消息集合。
 
-    **Python**
-
     ```python
    # Initialize prompt with system message
-   prompt=[
-            SystemMessage("You are a helpful AI assistant that answers questions.")
+   prompt = [
+            {"role": "system", "content": "You are a helpful AI assistant that answers questions."}
         ]
-    ```
-
-    **C#**
-
-    ```csharp
-   // Initialize prompt with system message
-   var prompt = new List<ChatRequestMessage>(){
-                    new ChatRequestSystemMessage("You are a helpful AI assistant that answers questions.")
-                };
     ```
 
 1. 请注意，代码包含一个循环，允许用户输入提示，直到输入“退出”。 然后在循环部分中，查找注释“**获取聊天完成**”，并添加以下代码，将用户输入添加到提示，从模型检索完成，并将完成添加到提示（以便保留历史聊天记录以供将来迭代）：
 
-    **Python**
-
     ```python
    # Get a chat completion
-   prompt.append(UserMessage(input_text))
-   response = chat.complete(
-        model=model_deployment,
-        messages=prompt)
+   prompt.append({"role": "user", "content": input_text})
+   response = openai_client.chat.completions.create(
+            model=model_deployment,
+            messages=prompt)
    completion = response.choices[0].message.content
    print(completion)
-   prompt.append(AssistantMessage(completion))
-    ```
-
-    **C#**
-
-    ```csharp
-   // Get a chat completion
-   prompt.Add(new ChatRequestUserMessage(input_text));
-   var requestOptions = new ChatCompletionsOptions()
-   {
-       Model = model_deployment,
-       Messages = prompt
-   };
-
-   Response<ChatCompletions> response = chat.Complete(requestOptions);
-   var completion = response.Value.Content;
-   Console.WriteLine(completion);
-   prompt.Add(new ChatRequestAssistantMessage(completion));
+   prompt.append({"role": "assistant", "content": completion})
     ```
 
 1. 使用 **Ctrl+S** 命令保存对代码文件的更改。
@@ -283,16 +189,8 @@ lab:
 1. 出现提示时，请按照说明在新选项卡中打开登录页，并输入提供的验证码和 Azure 凭据。 然后在命令行中完成登录过程，并在出现提示时选择包含 Azure AI Foundry 中心的订阅。
 1. 登录后，输入以下命令来运行应用程序：
 
-    **Python**
-
     ```
    python chat-app.py
-    ```
-
-    **C#**
-
-    ```
-   dotnet run
     ```
 
 1. 出现提示时，输入问题，例如`What is the fastest animal on Earth?`并查看生成式 AI 模型的回复。
