@@ -10,9 +10,15 @@ lab:
 
 在本练习中，你将使用 Azure AI Foundry 将自定义数据集成到生成式 AI 解决方案中。
 
-本练习大约需要 **45** 分钟。
+> **注意**：本练习中的代码基于预发布 SDK 软件，可能会有更改。 必要时，我们使用了特定版本的包；这可能没有反映最新的可用版本。 可能会遇到一些意想不到的行为、警告或错误。
 
-> **备注**：本练习基于预发布的服务，可能会有更改。
+尽管本练习基于 Azure OpenAI Python SDK，但你也可以使用多种语言特定的 SDK 开发 AI 聊天应用程序，包括：
+
+- [适用于 Python 的 OpenAI](https://pypi.org/project/openai/)
+- [适用于 Microsoft .NET 的 Azure Open AI](https://www.nuget.org/packages/Azure.AI.OpenAI)
+- [适用于 TypeScript 的 Azure OpenAI](https://www.npmjs.com/package/@azure/openai)
+
+本练习大约需要 **45** 分钟。
 
 ## Azure AI Foundry 中心和项目
 
@@ -124,8 +130,6 @@ lab:
 
 拥有工作索引后，可以使用 Azure OpenAI SDK 在客户端应用程序中实现 RAG 模式。 我们将在一个简单的示例中探索代码实现。
 
-> **提示**：你可以选择使用 Python 或 Microsoft C# 开发 RAG 解决方案。 按照所选语言的相应部分中的说明进行操作。
-
 ### 准备应用程序配置
 
 1. 返回到包含 Azure 门户的浏览器标签页（使 Azure AI Foundry 门户在现有选项卡中保持打开状态）。
@@ -150,23 +154,11 @@ lab:
 
 1. 克隆存储库后，导航到包含聊天应用程序代码文件的文件夹：
 
-    > **备注**：按照所选编程语言的步骤操作。
-
-    **Python**
-
     ```
    cd mslearn-ai-foundry/labfiles/rag-app/python
     ```
 
-    **C#**
-
-    ```
-   cd mslearn-ai-foundry/labfiles/rag-app/c-sharp
-    ```
-
 1. 在 Cloud Shell 命令行窗格中，输入以下命令以安装 OpenAI SDK 库：
-
-    **Python**
 
     ```
    python -m venv labenv
@@ -174,30 +166,15 @@ lab:
    pip install -r requirements.txt openai
     ```
 
-    **C#**
-
-    ```
-   dotnet add package Azure.AI.OpenAI
-    ```
-    
-
 1. 输入以下命令以编辑已提供的配置文件：
-
-    **Python**
 
     ```
    code .env
     ```
 
-    **C#**
-
-    ```
-   code appsettings.json
-    ```
-
     该文件已在代码编辑器中打开。
 
-1. 在代码文件中，替换以下占位符： 
+1. 在配置文件中，替换以下占位符： 
     - your_openai_endpoint****：Azure AI Foundry 门户中项目“概述”页的“Open AI 终结点”（请务必选择“Azure OpenAI”功能选项卡，而不是 Azure AI 推理或 Azure AI 服务功能）。********
     - your_openai_api_key：Azure AI Foundry 门户中项目“概述”页的“Open AI API 密钥”（请务必选择“Azure OpenAI”功能选项卡，而不是 Azure AI 推理或 Azure AI 服务功能）。************
     - **your_chat_model**：从 Azure AI Foundry 门户中“**模型 + 终结点**”页（默认名称为`gpt-4o`）分配给 **GPT-4o** 模型部署的名称。
@@ -211,16 +188,8 @@ lab:
 
 1. 输入以下命令以编辑已提供的代码文件：
 
-    **Python**
-
     ```
    code rag-app.py
-    ```
-
-    **C#**
-
-    ```
-   code Program.cs
     ```
 
 1. 查看文件中的代码，并注意以下几点：
@@ -240,19 +209,9 @@ lab:
 
 1. 在 Cloud Shell 命令行窗格中，输入以下命令以运行应用：
 
-    **Python**
-
     ```
    python rag-app.py
     ```
-
-    **C#**
-
-    ```
-   dotnet run
-    ```
-
-    > **提示**：如果由于未安装 .NET 版本 9.0 而发生编译错误，请使用 `dotnet --version` 命令确定环境中安装的 .NET 版本，然后编辑代码文件夹中的 rag_app.csproj 文件，相应地更新 TargetFramework 设置。********
 
 1. 出现提示时，输入问题，例如`Where should I go on vacation to see architecture?`并查看生成式 AI 模型的回复。
 
