@@ -175,8 +175,8 @@ lab:
     该文件已在代码编辑器中打开。
 
 1. 在配置文件中，替换以下占位符： 
-    - your_openai_endpoint****：Azure AI Foundry 门户中项目“概述”页的“Open AI 终结点”（请务必选择“Azure OpenAI”功能选项卡，而不是 Azure AI 推理或 Azure AI 服务功能）。********
-    - your_openai_api_key：Azure AI Foundry 门户中项目“概述”页的“Open AI API 密钥”（请务必选择“Azure OpenAI”功能选项卡，而不是 Azure AI 推理或 Azure AI 服务功能）。************
+    - your_openai_endpoint****：Azure AI Foundry 门户中项目“概述”页中的 Open AI 终结点（请务必选择“Azure OpenAI”功能选项卡）。********
+    - your_openai_api_key****：Azure AI Foundry 门户中项目“概述”页的 Open AI API 键（请务必选择“Azure OpenAI”功能选项卡）********。
     - **your_chat_model**：从 Azure AI Foundry 门户中“**模型 + 终结点**”页（默认名称为`gpt-4o`）分配给 **GPT-4o** 模型部署的名称。
     - **your_embedding_model**：从 Azure AI Foundry 门户中“**模型 + 终结点**”页（默认名称为`text-embedding-ada-002`）分配给 **text-embedding-ada-002** 模型部署的名称。
     - **your_search_endpoint**：Azure AI 搜索资源的 URL。 可以在 Azure AI Foundry 门户的**管理中心**中查找此信息。
