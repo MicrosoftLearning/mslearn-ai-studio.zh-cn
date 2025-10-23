@@ -46,7 +46,7 @@ Azure AI Foundry 中的提示流工具创建基于文件的资产，用于在 Bl
 
     ![Azure 门户中存储帐户访问控制页面的屏幕截图。](./media/storage-access-control.png)
 
-1. 为 Azure AI Foundry 资源使用的托管标识的 `Storage blob data reader` 角色添加角色分配：
+1. 为 Azure AI Foundry 项目资源使用的托管标识向 `Storage blob data reader` 角色添加角色分配：
 
     ![Azure 门户中存储帐户访问控制页面的屏幕截图。](./media/assign-role-access.png)
 
