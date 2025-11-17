@@ -1,3 +1,5 @@
+**⚠️ This GitHub repo will retire on 28th November 2025.**
+
 # 在 Azure 中开发生成式 AI 解决方案
 
 此存储库中的练习旨在提供动手学习体验，在其中可探索开发人员在 Microsoft Azure 上生成生成式 AI 解决方案时执行的常见任务。
